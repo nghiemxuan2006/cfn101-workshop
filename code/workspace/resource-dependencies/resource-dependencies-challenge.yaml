@@ -13,6 +13,8 @@ Resources:
     Properties:
       ImageId: !Ref LatestAmiId
       InstanceType: t2.micro
+      SecurityGroups:
+        - !Ref InstanceSecurityGroup
       Tags:
         - Key: Name
           Value: Resource-dependencies-workshop
@@ -41,3 +43,4 @@ Resources:
       Tags:
         - Key: Name
           Value: Resource-dependencies-workshop
+    DependsOn: Ec2Instance
