@@ -30,21 +30,6 @@ Parameters:
     Description: 'The ID of the AMI.'
     Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
 
-  # 1. remove VpcId parameter.
-  VpcId:
-    Type: AWS::EC2::VPC::Id
-    Description: 'The VPC ID'
-
-  # 2. remove SubnetID parameter.
-  SubnetId:
-    Type: AWS::EC2::Subnet::Id
-    Description: 'The Subnet ID'
-
-  # 3. remove WebServerInstanceProfile parameter.
-  WebServerInstanceProfile:
-    Type: String
-    Description: 'Instance profile resource ID'
-
 Mappings:
   EnvironmentToInstanceType:
     Dev:
@@ -119,8 +104,8 @@ Resources:
                   - /etc/cfn/cfn-hup.conf
                   - /etc/cfn/hooks.d/cfn-auto-reloader.conf
     Properties:
-      SubnetId: # <<< import the PublicSubnet1 exported value from the vpc stack
-      IamInstanceProfile: # <<< import the WebServerInstanceProfile exported value from the iam stack
+      SubnetId: !ImportValue cfn-workshop-PublicSubnet1 # <<< import the PublicSubnet1 exported value from the vpc stack
+      IamInstanceProfile: !ImportValue cfn-workshop-WebServerInstanceProfile # <<< import the WebServerInstanceProfile exported value from the iam stack
       ImageId: !Ref AmiID
       InstanceType: !FindInMap [EnvironmentToInstanceType, !Ref EnvironmentType, InstanceType]
       SecurityGroupIds:
@@ -161,7 +146,7 @@ Resources:
           FromPort: 443
           ToPort: 443
           CidrIp: 0.0.0.0/0
-      VpcId: # <<< import the VpcId exported value from the vpc stack
+      VpcId: !ImportValue cfn-workshop-VpcId # <<< import the VpcId exported value from the vpc stack
 
   WebServerEIP:
     Type: AWS::EC2::EIP

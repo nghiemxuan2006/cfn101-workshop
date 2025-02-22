@@ -6,6 +6,7 @@ Parameters:
   AvailabilityZones:
     Type: List<AWS::EC2::AvailabilityZone::Name>
     Description: The list of Availability Zones to use for the subnets in the VPC.
+    Default: "us-west-1a,us-west-1c"
 
   VPCName:
     Type: String
@@ -142,11 +143,17 @@ Outputs:
   VpcId:
     Value: !Ref VPC
     # 1. Add the code from "1. Prepare the VPC template" here
+    Export:
+      Name: cfn-workshop-VpcId
 
   PublicSubnet1:
     Value: !Ref VPCPublicSubnet1
     # 2. Add the code from "1. Prepare the VPC template" here
+    Export:
+      Name: cfn-workshop-PublicSubnet1
 
   PublicSubnet2:
     Value: !Ref VPCPublicSubnet2
     # 3. Add the code from "1. Prepare the VPC template" here
+    Export:
+      Name: cfn-workshop-PublicSubnet2
