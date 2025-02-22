@@ -4,5 +4,27 @@ Description: AWS CloudFormation workshop - Nested stacks - IAM template.
 
 Resources:
 # Copy the code from "1. Prepare IAM role template" section here
+  SSMIAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
 
+  WebServerInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+        - !Ref SSMIAMRole
 # Add the code from "4. Prepare the IAM template" here
+Outputs:
+  WebServerInstanceProfile:
+    Value: !Ref WebServerInstanceProfile

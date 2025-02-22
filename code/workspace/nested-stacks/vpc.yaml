@@ -135,3 +135,12 @@ Resources:
         Ref: VPCIGW
 
 # Add the code from "2. Prepare the VPC template" here
+Outputs:
+  VpcId:
+    Value: !Ref VPC
+
+  PublicSubnet1:
+    Value: !Ref VPCPublicSubnet1
+
+  PublicSubnet2:
+    Value: !Ref VPCPublicSubnet2
