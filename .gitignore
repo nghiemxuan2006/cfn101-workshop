@@ -40,6 +40,9 @@ cmake-build-*/
 
 # IntelliJ
 out/
+pytz*/
+
+*.zip
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
