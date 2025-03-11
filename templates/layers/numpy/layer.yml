@@ -1,0 +1,20 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: AWS CloudFormation template for Lambda Layer.
+
+Resources:
+  LambdaLayer:
+    Type: AWS::Lambda::LayerVersion
+    Properties:
+      LayerName: layer_name
+      Description: Lambda Layer for shared dependencies
+      Content:
+        S3Bucket: !Ref S3BucketName
+        S3Key: !Ref S3KeyName
+      CompatibleRuntimes:
+        - python3.12
+
+Outputs:
+  LayerVersionArn:
+    Description: ARN of the Lambda Layer
+    Value: !Ref LambdaLayer
