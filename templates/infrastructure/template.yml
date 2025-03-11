@@ -1,0 +1,24 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: VID Infrastructure
+Parameters:
+  InfrastructerName:
+    Type: String
+    Default: nx-vid
+
+Resources:
+  ApiGateway:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: !Sub ${InfrastructerName}-api
+      Description: API Gateway for Lambda function
+
+Outputs:
+  RestApiId:
+    Value: !Ref ApiGateway
+    Export:
+      Name: RestApiId
+  RestApiRootResourceId:
+    Value: !GetAtt ApiGateway.RootResourceId
+    Export:
+      Name: RestApiRootResourceId

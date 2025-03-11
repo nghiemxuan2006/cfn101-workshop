@@ -2,26 +2,34 @@ AWSTemplateFormatVersion: "2010-09-09"
 
 Description: API Gateway configuration for the Lambda function integrated with the layer.
 
-Resources:
-  ApiGateway:
-    Type: AWS::ApiGateway::RestApi
-    Properties:
-      Name: MyApi
-      Description: API Gateway for Lambda function
+Parameters:
+  EndPoint:
+    Type: String
+    Default: hello-nghiem
+  EnvironmentType:
+    Description: Specify the Environment type of the stack.
+    Type: String
+    Default: test
+    AllowedValues:
+      - dev
+      - test
+      - prod
+    ConstraintDescription: Specify either dev, test or prod.
 
+Resources:
   ApiGatewayResource:
     Type: AWS::ApiGateway::Resource
     Properties:
-      ParentId: !GetAtt ApiGateway.RootResourceId
-      RestApiId: !Ref ApiGateway
-      PathPart: myresource
+      ParentId: !ImportValue RestApiRootResourceId
+      RestApiId: !ImportValue RestApiId
+      PathPart: !Ref Endpoint
 
   ApiGatewayMethod:
     Type: AWS::ApiGateway::Method
     Properties:
       HttpMethod: POST
-      ResourceId: !Ref ApiGatewayResource
-      RestApiId: !Ref ApiGateway
+      ResourceId: !ImportValue RestApiIdResource
+      RestApiId: !ImportValue RestApiId
       AuthorizationType: NONE
       Integration:
         Type: AWS_PROXY
@@ -34,10 +42,10 @@ Resources:
     Type: AWS::ApiGateway::Deployment
     DependsOn: ApiGatewayMethod
     Properties:
-      RestApiId: !Ref ApiGateway
-      StageName: prod
+      RestApiId: !ImportValue RestApiId
+      StageName: !Ref EnvironmentType
 
 Outputs:
   ApiGatewayUrl:
     Description: URL of the API Gateway
-    Value: !Sub https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod/myresource
+    Value: !Sub https://${RestApiId}.execute-api.${AWS::Region}.amazonaws.com/${EnvironmentType}/${Endpoint}

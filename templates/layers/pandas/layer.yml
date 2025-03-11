@@ -6,7 +6,7 @@ Resources:
   LambdaLayer:
     Type: AWS::Lambda::LayerVersion
     Properties:
-      LayerName: layer_name
+      LayerName: !Sub "${AWS::StackName}-pandas-layer"
       Description: Lambda Layer for shared dependencies
       Content:
         S3Bucket: !Ref S3BucketName
