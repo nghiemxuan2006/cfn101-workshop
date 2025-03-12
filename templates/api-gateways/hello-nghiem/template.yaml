@@ -38,6 +38,19 @@ Resources:
       MethodResponses:
         - StatusCode: 200
 
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !ImportValue LambdaExecutionRole.Arn
+      Code:
+        S3Bucket: s3-bucket-bucket
+        S3Key: get-hello-nghiem.zip
+      Runtime: python3.12
+      Environment:
+        Variables:
+          ENV_TYPE: !Ref EnvironmentType
+
   ApiGatewayDeployment:
     Type: AWS::ApiGateway::Deployment
     DependsOn: ApiGatewayMethod

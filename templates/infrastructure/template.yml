@@ -12,6 +12,29 @@ Resources:
     Properties:
       Name: !Sub ${InfrastructerName}-api
       Description: API Gateway for Lambda function
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties: 
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement: 
+          - Effect: "Allow"
+            Principal: 
+              Service: 
+                - "lambda.amazonaws.com"
+            Action: 
+              - "sts:AssumeRole"
+      Policies: 
+        - PolicyName: "LambdaExecutionPolicy"
+          PolicyDocument: 
+            Version: "2012-10-17"
+            Statement: 
+              - Effect: "Allow"
+                Action: 
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: "*"
 
 Outputs:
   RestApiId:
@@ -22,3 +45,7 @@ Outputs:
     Value: !GetAtt ApiGateway.RootResourceId
     Export:
       Name: RestApiRootResourceId
+  LambdaExecutionRole:
+    Value: !Ref LambdaExecutionRole
+    Export:
+      Name: LambdaExecutionRole
