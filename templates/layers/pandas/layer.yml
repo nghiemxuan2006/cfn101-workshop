@@ -6,11 +6,11 @@ Resources:
   LambdaLayer:
     Type: AWS::Lambda::LayerVersion
     Properties:
-      LayerName: !Sub "${AWS::StackName}-pandas-layer"
+      LayerName: pandas-layer
       Description: Lambda Layer for shared dependencies
       Content:
-        S3Bucket: !Ref S3BucketName
-        S3Key: !Ref S3KeyName
+        S3Bucket: my-bucket-bucket
+        S3Key: pandas-layer.zip
       CompatibleRuntimes:
         - python3.12
 
@@ -18,3 +18,5 @@ Outputs:
   LayerVersionArn:
     Description: ARN of the Lambda Layer
     Value: !Ref LambdaLayer
+    Export:
+      Name: pandas-layer
