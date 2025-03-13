@@ -6,6 +6,9 @@ Parameters:
   EndPoint:
     Type: String
     Default: hello-nghiem
+  MethodAPI:
+    Type: String
+    Default: GET
   EnvironmentType:
     Description: Specify the Environment type of the stack.
     Type: String
@@ -27,7 +30,7 @@ Resources:
   ApiGatewayMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      HttpMethod: POST
+      HttpMethod: !Ref MethodAPI
       ResourceId: !ImportValue RestApiIdResource
       RestApiId: !ImportValue RestApiId
       AuthorizationType: NONE
