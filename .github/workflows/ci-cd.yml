@@ -25,9 +25,8 @@ jobs:
           aws-region: ${{ secrets.MY_AWS_REGION }}
 
       - name: Package and upload Lambda layers
-        working-directory: templates
         run: |
-          chmod +x bash_scripts/package_layers.sh
+          chmod +x ./templates/bash_scripts/package_layers.sh
           ./templates/bash_scripts/package_layers.sh
 
       # - name: Package Lambda function
