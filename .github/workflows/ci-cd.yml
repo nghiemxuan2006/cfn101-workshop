@@ -31,11 +31,10 @@ jobs:
           chmod +x ./templates/bash_scripts/prepare_layers.sh
           ./templates/bash_scripts/prepare_layers.sh
 
-      # - name: Package Lambda function
-      #   run: |
-      #     cd src/lambda_function
-      #     zip -r function.zip .
-      #     aws s3 cp function.zip s3://your-s3-bucket-name/templates/
+      - name: Package Lambda function
+        run: |
+          chmod +x ./templates/bash_scripts/prepare_lambda.sh
+          ./templates/bash_scripts/prepare_lambda.sh
 
   # deploy:
   #   runs-on: ubuntu-latest

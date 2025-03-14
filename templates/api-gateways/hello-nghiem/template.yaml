@@ -53,7 +53,7 @@ Resources:
       Role: !ImportValue LambdaExecutionRole.Arn
       Code:
         S3Bucket: my-bucket-bucket
-        S3Key: get-hello-nghiem.zip
+        S3Key: lambda-functions/get-hello-nghiem.zip
       Runtime: python3.12
       Environment:
         Variables:

@@ -10,7 +10,7 @@ Resources:
       Description: Lambda Layer for shared dependencies
       Content:
         S3Bucket: my-bucket-bucket
-        S3Key: numpy-layer.zip
+        S3Key: layers/numpy-layer.zip
       CompatibleRuntimes:
         - python3.12
 
