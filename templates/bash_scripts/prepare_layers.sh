@@ -19,6 +19,6 @@ for layer in "$LAYER_DIR"/*; do
 
     # Upload the packaged layer to S3
     echo "Uploading layer: $layer_name"
-    aws s3 cp "$layer/${layer_name}-layer.zip" "s3://$S3_BUCKET/layers"
+    aws s3 cp "$layer/${layer_name}-layer.zip" "s3://$S3_BUCKET/layers/"
   fi
 done
