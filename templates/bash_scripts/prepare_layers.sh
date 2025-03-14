@@ -14,11 +14,11 @@ for layer in "$LAYER_DIR"/*; do
     # Install dependencies and package the layer
     cd "$layer"
     pip install -r requirements.txt -t .
-    zip -r "${layer_name}.zip" .
+    zip -r "${layer_name}-layer.zip" .
     cd - > /dev/null
 
     # Upload the packaged layer to S3
     echo "Uploading layer: $layer_name"
-    aws s3 cp "$layer/${layer_name}.zip" "s3://$S3_BUCKET/"
+    aws s3 cp "$layer/${layer_name}.zip" "s3://$S3_BUCKET/layers"
   fi
 done
