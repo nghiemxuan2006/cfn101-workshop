@@ -23,6 +23,8 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.MY_AWS_REGION }}
+      - name: Debug file path
+        run: ls -la
 
       - name: Package and upload Lambda layers
         run: |
