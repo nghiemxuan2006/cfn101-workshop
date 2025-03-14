@@ -1,4 +1,5 @@
 FUNCTION_DIR="templates/api-gateways"
+S3_BUCKET="my-bucket-bucket"
 
 # Package and upload Lambda functions
 for function in "$FUNCTION_DIR"/*; do
@@ -12,13 +13,13 @@ for function in "$FUNCTION_DIR"/*; do
 
         # Package the Lambda function
         cd "$method"
-        zip -r "${method_name}-${function_name}-function.zip" .
+        zip -r "${method_name}-${function_name}.zip" .
         cd - > /dev/null
 
         # Upload the packaged function to S3
         echo "Uploading function: $function_name"
         echo "Uploading method: $method_name"
-        aws s3 cp "$method/${method_name}-${function_name}-function.zip" "s3://$S3_BUCKET/lambda-functions/"
+        aws s3 cp "$method/${method_name}-${function_name}.zip" "s3://$S3_BUCKET/lambda-functions/"
       fi
     done
   fi
