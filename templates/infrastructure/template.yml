@@ -49,3 +49,7 @@ Outputs:
     Value: !Ref LambdaExecutionRole
     Export:
       Name: LambdaExecutionRole
+  InfrastructerName:
+    Value: !Ref InfrastructerName
+    Export:
+      Name: InfrastructerName
