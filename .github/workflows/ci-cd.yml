@@ -28,8 +28,8 @@ jobs:
 
       - name: Package and upload Lambda layers
         run: |
-          chmod +x ./templates/bash_scripts/package_layers.sh
-          ./templates/bash_scripts/package_layers.sh
+          chmod +x ./templates/bash_scripts/prepare_layers.sh
+          ./templates/bash_scripts/prepare_layers.sh
 
       # - name: Package Lambda function
       #   run: |
