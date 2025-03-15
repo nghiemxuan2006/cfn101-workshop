@@ -9,10 +9,9 @@ Parameters:
   MethodAPI:
     Type: String
     Default: GET
-  InfrastructerName:
+  InfrastructureName:
     Type: String
-    Default: nx-vid
-    value: !ImportValue InfrastructerName
+    Default: !ImportValue InfrastructureName
   EnvironmentType:
     Description: Specify the Environment type of the stack.
     Type: String
@@ -48,7 +47,7 @@ Resources:
   LambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: !Sub ${InfrastructerName}-${MethodAPI}-${EndPoint}
+      FunctionName: !Sub ${InfrastructureName}-${MethodAPI}-${EndPoint}
       Handler: lambda_function.handler
       Role: !ImportValue LambdaExecutionRole.Arn
       Code:

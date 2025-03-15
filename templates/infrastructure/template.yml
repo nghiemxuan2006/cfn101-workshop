@@ -2,7 +2,7 @@ AWSTemplateFormatVersion: "2010-09-09"
 
 Description: VID Infrastructure
 Parameters:
-  InfrastructerName:
+  InfrastructureName:
     Type: String
     Default: nx-vid
 
@@ -10,7 +10,7 @@ Resources:
   ApiGateway:
     Type: AWS::ApiGateway::RestApi
     Properties:
-      Name: !Sub ${InfrastructerName}-api
+      Name: !Sub ${InfrastructureName}-api
       Description: API Gateway for Lambda function
   LambdaExecutionRole:
     Type: AWS::IAM::Role
@@ -49,7 +49,7 @@ Outputs:
     Value: !Ref LambdaExecutionRole
     Export:
       Name: LambdaExecutionRole
-  InfrastructerName:
-    Value: !Ref InfrastructerName
+  InfrastructureName:
+    Value: !Ref InfrastructureName
     Export:
-      Name: InfrastructerName
+      Name: InfrastructureName
