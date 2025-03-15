@@ -28,7 +28,7 @@ Resources:
     Properties:
       ParentId: !ImportValue RestApiRootResourceId
       RestApiId: !ImportValue RestApiId
-      PathPart: !Ref Endpoint
+      PathPart: !Ref EndPoint
 
   ApiGatewayMethod:
     Type: AWS::ApiGateway::Method
