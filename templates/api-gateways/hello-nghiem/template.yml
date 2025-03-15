@@ -8,10 +8,10 @@ Parameters:
     Default: hello-nghiem
   MethodAPI:
     Type: String
-    Default: GET
+    Default: get
   InfrastructureName:
     Type: String
-    Default: !ImportValue InfrastructureName
+    Default: nx-vid
   EnvironmentType:
     Description: Specify the Environment type of the stack.
     Type: String
