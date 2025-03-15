@@ -67,7 +67,7 @@ Resources:
       RestApiId: !ImportValue RestApiId
       StageName: !Ref EnvironmentType
 
-Outputs:
-  ApiGatewayUrl:
-    Description: URL of the API Gateway
-    Value: !Sub https://${RestApiId}.execute-api.${AWS::Region}.amazonaws.com/${EnvironmentType}/${EndPoint}
+# Outputs:
+#   ApiGatewayUrl:
+#     Description: URL of the API Gateway
+#     Value: !Sub https://${RestApiId}.execute-api.${AWS::Region}.amazonaws.com/${EnvironmentType}/${EndPoint}
