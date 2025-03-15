@@ -36,11 +36,29 @@ jobs:
           chmod +x ./templates/bash_scripts/prepare_lambda.sh
           ./templates/bash_scripts/prepare_lambda.sh
 
-  # deploy:
-  #   runs-on: ubuntu-latest
-  #   needs: build
+  deploy:
+      runs-on: ubuntu-latest
+      needs: build
 
-  #   steps:
-  #     - name: Deploy CloudFormation stacks
-  #       run: |
-  #         aws cloudformation deploy --template-file templates/main.yml --stack-name my-main-stack --capabilities CAPABILITY_IAM
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v2
+
+        - name: Set up AWS CLI
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: ${{ secrets.MY_AWS_REGION }}
+
+        - name: Deploy Infrastructure Stack
+          run: |
+            echo "Deploying main infrastructure stack..."
+            aws cloudformation deploy \
+              --template-file templates/infrastructure/template.yml \
+              --stack-name nx-vid-infrastructure-stack \
+              --capabilities CAPABILITY_IAM
+        - name: Deploy API Gateway
+          run: |
+            chmod +x ./templates/bash_scripts/deploy_apigateways.sh
+            ./templates/bash_scripts/deploy_apigateways.sh
