@@ -46,7 +46,7 @@ Outputs:
     Export:
       Name: RestApiRootResourceId
   LambdaExecutionRole:
-    Value: !Ref LambdaExecutionRole
+    Value: !GetAtt LambdaExecutionRole.Arn
     Export:
       Name: LambdaExecutionRole
   InfrastructureName:

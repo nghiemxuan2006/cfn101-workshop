@@ -49,7 +49,7 @@ Resources:
     Properties:
       FunctionName: !Sub ${InfrastructureName}-${MethodAPI}-${EndPoint}
       Handler: lambda_function.handler
-      Role: !ImportValue LambdaExecutionRole.Arn
+      Role: !ImportValue LambdaExecutionRole
       Code:
         S3Bucket: my-bucket-bucket
         S3Key: lambda-functions/get-hello-world.zip
