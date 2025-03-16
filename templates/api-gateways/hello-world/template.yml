@@ -41,21 +41,6 @@ Resources:
       RestApiId: !ImportValue RestApiId
       PathPart: !Ref EndPoint
 
-  ApiGatewayMethod:
-    Type: AWS::ApiGateway::Method
-    DependsOn: LambdaFunction
-    Properties:
-      HttpMethod: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]
-      ResourceId: !Ref ApiGatewayResource
-      RestApiId: !ImportValue RestApiId
-      AuthorizationType: NONE
-      Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations
-      MethodResponses:
-        - StatusCode: 200
-
   LambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
@@ -71,6 +56,21 @@ Resources:
           ENV_TYPE: !Ref EnvironmentType
       Layers:
         - !ImportValue numpy-layer
+
+  ApiGatewayMethod:
+    Type: AWS::ApiGateway::Method
+    DependsOn: LambdaFunction
+    Properties:
+      HttpMethod: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]
+      ResourceId: !Ref ApiGatewayResource
+      RestApiId: !ImportValue RestApiId
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations
+      MethodResponses:
+        - StatusCode: 200
 
   ApiGatewayDeployment:
     Type: AWS::ApiGateway::Deployment
