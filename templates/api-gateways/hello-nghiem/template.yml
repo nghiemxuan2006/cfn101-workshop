@@ -89,12 +89,12 @@ Resources:
         ResponseModels:
           application/json: Empty
 
-  # ApiGatewayDeployment:
-  #   Type: AWS::ApiGateway::Deployment
-  #   DependsOn: ApiGatewayMethod
-  #   Properties:
-  #     RestApiId: !ImportValue RestApiId
-  #     StageName: !Ref EnvironmentType
+  ApiGatewayDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: ApiGatewayMethod
+    Properties:
+      RestApiId: !ImportValue RestApiId
+      StageName: !Ref EnvironmentType
 
 # Outputs:
 #   ApiGatewayUrl:
