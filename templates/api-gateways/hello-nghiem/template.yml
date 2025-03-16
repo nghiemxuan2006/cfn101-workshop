@@ -43,6 +43,7 @@ Resources:
 
   ApiGatewayMethod:
     Type: AWS::ApiGateway::Method
+    DependsOn: LambdaFunction
     Properties:
       HttpMethod: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]
       ResourceId: !Ref ApiGatewayResource
