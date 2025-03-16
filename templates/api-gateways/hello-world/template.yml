@@ -41,8 +41,8 @@ Resources:
         Type: AWS_PROXY
         IntegrationHttpMethod: POST
         Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations
-      # MethodResponses:
-      #   - StatusCode: 200
+      MethodResponses:
+        - StatusCode: 200
 
   LambdaFunction:
     Type: AWS::Lambda::Function
