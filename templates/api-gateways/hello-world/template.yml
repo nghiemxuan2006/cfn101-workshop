@@ -22,6 +22,13 @@ Parameters:
       - prod
     ConstraintDescription: Specify either dev, test or prod.
 
+Mappings:
+  UpperCaseMethodAPI:
+    get: GET
+    post: POST
+    put: PUT
+    delete: DELETE
+
 Resources:
   ApiGatewayResource:
     Type: AWS::ApiGateway::Resource
@@ -33,7 +40,7 @@ Resources:
   ApiGatewayMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      HttpMethod: !Ref MethodAPI
+      HttpMethod: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI]
       ResourceId: !Ref ApiGatewayResource
       RestApiId: !ImportValue RestApiId
       AuthorizationType: NONE
