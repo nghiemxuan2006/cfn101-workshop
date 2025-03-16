@@ -66,7 +66,7 @@ Resources:
       RestApiId: !ImportValue RestApiId
       AuthorizationType: NONE
       Integration:
-        Type: AWS_PROXY
+        Type: AWS
         IntegrationHttpMethod: POST
         Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations
       MethodResponses:
