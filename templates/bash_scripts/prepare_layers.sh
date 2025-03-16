@@ -13,8 +13,8 @@ for layer in "$LAYER_DIR"/*; do
 
     # Install dependencies and package the layer
     cd "$layer"
-    pip install -r requirements.txt -t .
-    zip -r "${layer_name}-layer.zip" .
+    pip install -r requirements.txt -t python
+    zip -r "${layer_name}-layer.zip" python
     cd - > /dev/null
 
     # Upload the packaged layer to S3
