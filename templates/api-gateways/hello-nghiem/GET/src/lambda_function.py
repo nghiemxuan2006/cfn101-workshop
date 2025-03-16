@@ -1,5 +1,5 @@
 import pandas as pd
-def handler(event, context):
+def lambda_handler(event, context):
     # Process the incoming event and return a response
     return {
         'statusCode': 200,
