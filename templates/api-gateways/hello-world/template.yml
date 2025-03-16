@@ -56,6 +56,16 @@ Resources:
           ENV_TYPE: !Ref EnvironmentType
       Layers:
         - !ImportValue numpy-layer
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt LambdaFunction.Arn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: 
+        Fn::Sub: 
+          - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApiId}/${EndPoint}
+          - RestApiId: !ImportValue RestApiId
 
   ApiGatewayMethod:
     Type: AWS::ApiGateway::Method
