@@ -64,8 +64,9 @@ Resources:
       Principal: apigateway.amazonaws.com
       SourceArn: 
         Fn::Sub: 
-          - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApiId}/${EndPoint}
+          -  arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApiId}/*/${MethodAPI}/${EndPoint}
           - RestApiId: !ImportValue RestApiId
+          - MethodAPI: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]
 
   ApiGatewayMethod:
     Type: AWS::ApiGateway::Method
