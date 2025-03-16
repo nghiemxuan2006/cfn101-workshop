@@ -12,7 +12,7 @@ for function in "$FUNCTION_DIR"/*; do
         echo "Packaging method: $method_name"
 
         # Package the Lambda function
-        cd "$method"
+        cd "$method/src"
         zip -r "${method_name}-${function_name}.zip" .
         cd - > /dev/null
 
