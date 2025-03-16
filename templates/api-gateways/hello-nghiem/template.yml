@@ -80,6 +80,10 @@ Resources:
         Type: AWS
         IntegrationHttpMethod: POST
         Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseTemplates:
+              application/json: ""
       MethodResponses:
       - StatusCode: 200
         ResponseModels:
