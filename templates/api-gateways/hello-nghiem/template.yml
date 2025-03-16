@@ -24,10 +24,14 @@ Parameters:
 
 Mappings:
   UpperCaseMethodAPI:
-    get: GET
-    post: POST
-    put: PUT
-    delete: DELETE
+    get:
+      Method: GET
+    post:
+      Method: POST
+    put:
+      Method: PUT
+    delete:
+      Method: DELETE
 
 Resources:
   ApiGatewayResource:
@@ -40,7 +44,7 @@ Resources:
   ApiGatewayMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      HttpMethod: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI]
+      HttpMethod: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]
       ResourceId: !Ref ApiGatewayResource
       RestApiId: !ImportValue RestApiId
       AuthorizationType: NONE
