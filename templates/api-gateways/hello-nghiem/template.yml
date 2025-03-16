@@ -34,7 +34,7 @@ Resources:
     Type: AWS::ApiGateway::Method
     Properties:
       HttpMethod: !Ref MethodAPI
-      ResourceId: !ImportValue RestApiRootResourceId
+      ResourceId: !Ref ApiGatewayResource
       RestApiId: !ImportValue RestApiId
       AuthorizationType: NONE
       Integration:
