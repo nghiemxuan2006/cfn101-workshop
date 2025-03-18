@@ -56,6 +56,11 @@ Resources:
           ENV_TYPE: !Ref EnvironmentType
       Layers:
         - !ImportValue numpy-layer
+  LambdaVersion:
+    Type: AWS::Lambda::Version
+    Properties:
+      FunctionName: !Ref LambdaFunction
+      
   LambdaInvokePermission:
     Type: AWS::Lambda::Permission
     Properties:
