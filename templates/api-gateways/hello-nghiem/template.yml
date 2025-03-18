@@ -57,10 +57,10 @@ Resources:
       Layers:
         - !ImportValue pandas-layer
 
-  LambdaVersion:
-    Type: AWS::Lambda::Version
-    Properties:
-      FunctionName: !Ref LambdaFunction
+  # LambdaVersion:
+  #   Type: AWS::Lambda::Version
+  #   Properties:
+  #     FunctionName: !Ref LambdaFunction
   LambdaInvokePermission:
     Type: AWS::Lambda::Permission
     Properties:
