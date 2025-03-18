@@ -60,7 +60,7 @@ Resources:
     Type: AWS::Lambda::Version
     Properties:
       FunctionName: !Ref LambdaFunction
-      
+
   LambdaInvokePermission:
     Type: AWS::Lambda::Permission
     Properties:
@@ -104,4 +104,4 @@ Resources:
 # Outputs:
 #   ApiGatewayUrl:
 #     Description: URL of the API Gateway
-#     Value: !Sub https://${RestApiId}.execute-api.${AWS::Region}.amazonaws.com/${EnvironmentType}/${EndPoint} 
+#     Value: !Sub https://${RestApiId}.execute-api.${AWS::Region}.amazonaws.com/${EnvironmentType}/${EndPoint}
