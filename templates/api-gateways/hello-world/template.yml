@@ -69,6 +69,7 @@ Resources:
 
   LambdaInvokePermission:
     Type: AWS::Lambda::Permission
+    DependsOn: LambdaAlias
     Properties:
       FunctionName: !Sub ${LambdaFunction.Arn}:${EnvironmentType}
       Action: lambda:InvokeFunction
