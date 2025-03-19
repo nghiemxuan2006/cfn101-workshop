@@ -61,6 +61,7 @@ Resources:
     Type: AWS::Lambda::Version
     Properties:
       FunctionName: !Ref LambdaFunction
+      Description: !Sub "Version created at ${AWS::StackName}-${AWS::Region}-${AWS::AccountId}-${AWS::Timestamp}"
   LambdaAlias:
     Type: AWS::Lambda::Alias
     Properties:

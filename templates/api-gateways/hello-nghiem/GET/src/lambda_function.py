@@ -3,5 +3,5 @@ def handler(event, context):
     # Process the incoming event and return a response
     return {
         'statusCode': 200,
-        'body': 'Hello from Xuan nghiem deptrai!'
+        'body': 'Hello from Xuan nghiem deptrai sieu deptrai!'
     }
