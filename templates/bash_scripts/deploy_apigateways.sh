@@ -9,7 +9,6 @@ STACK_NAME_PREFIX="nx-vid"
 
 API_GATEWAYS_DIR="templates/api-gateways"
 
-echo $COMMIT_MESSAGE
 # Deploy API Gateway stacks
 if [ -d "$API_GATEWAYS_DIR" ]; then
   echo "Deploying API Gateway stacks..."

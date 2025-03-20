@@ -1,6 +1,8 @@
 FUNCTION_DIR="templates/api-gateways"
 S3_BUCKET="my-bucket-bucket"
 
+echo $SOURCE
+echo $BUILD_SOURCEVERSION
 # Package and upload Lambda functions
 for function in "$FUNCTION_DIR"/*; do
   if [ -d "$function" ]; then
