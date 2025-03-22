@@ -49,7 +49,7 @@ Resources:
       Role: !ImportValue LambdaExecutionRole
       Code:
         S3Bucket: my-bucket-bucket
-        S3Key: lambda-functions/get-hello-world.zip
+        S3Key: lambda-functions/get-hello-world-COMMIT_HASH.zip
       Runtime: python3.12
       Environment:
         Variables:

@@ -3,6 +3,7 @@ S3_BUCKET="my-bucket-bucket"
 
 echo $SOURCE
 echo $BUILD_SOURCEVERSION
+echo $COMMIT_HASH
 # Package and upload Lambda functions
 for function in "$FUNCTION_DIR"/*; do
   if [ -d "$function" ]; then
@@ -15,7 +16,7 @@ for function in "$FUNCTION_DIR"/*; do
 
         # Package the Lambda function
         cd "$method/src"
-        zip -r "${method_name}-${function_name}.zip" .
+        zip -r "${method_name}-${function_name}-$COMMIT_HASH.zip" .
         cd - > /dev/null
 
         # Upload the packaged function to S3
