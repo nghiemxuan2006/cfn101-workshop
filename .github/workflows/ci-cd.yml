@@ -8,6 +8,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      COMMIT_HASH: ${{ github.sha }}
+    outputs:
+      commit_hash: ${{ steps.set_commit_hash.outputs.commit_hash }}
 
     steps:
       - name: Checkout code
@@ -39,6 +43,8 @@ jobs:
   deploy:
       runs-on: ubuntu-latest
       needs: build
+      env:
+        COMMIT_HASH: ${{ needs.build.outputs.commit_hash }}
 
       steps:
         - name: Checkout code
@@ -63,8 +69,6 @@ jobs:
             chmod +x ./templates/bash_scripts/deploy_layers.sh
             ./templates/bash_scripts/deploy_layers.sh
         - name: Deploy API Gateway
-          env:
-            COMMIT_HASH: ${{ github.sha }}
           run: |
             chmod +x ./templates/bash_scripts/deploy_apigateways.sh
             ./templates/bash_scripts/deploy_apigateways.sh
