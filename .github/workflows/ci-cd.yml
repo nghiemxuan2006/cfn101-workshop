@@ -44,7 +44,7 @@ jobs:
       runs-on: ubuntu-latest
       needs: build
       env:
-        COMMIT_HASH: ${{ needs.build.outputs.commit_hash }}
+        COMMIT_HASH: ${{ github.sha }}
 
       steps:
         - name: Checkout code
