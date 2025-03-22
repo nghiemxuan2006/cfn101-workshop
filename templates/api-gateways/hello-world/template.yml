@@ -3,6 +3,8 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: API Gateway configuration for the Lambda function integrated with the layer.
 
 Parameters:
+  COMMIT_MESSAGE:
+    Type: String
   EndPoint:
     Type: String
     Default: hello-nghiem
@@ -60,11 +62,13 @@ Resources:
     Type: AWS::Lambda::Version
     Properties:
       FunctionName: !Ref LambdaFunction
+      Description: !Ref COMMIT_MESSAGE
   LambdaAlias:
     Type: AWS::Lambda::Alias
     Properties:
       FunctionName: !Ref LambdaFunction
       FunctionVersion: !GetAtt LambdaVersion.Version
+      Description: !Ref COMMIT_MESSAGE
       Name: !Ref EnvironmentType
 
   LambdaInvokePermission:
