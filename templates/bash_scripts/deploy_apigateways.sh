@@ -9,6 +9,8 @@ STACK_NAME_PREFIX="nx-vid"
 
 API_GATEWAYS_DIR="templates/api-gateways"
 
+echo $COMMIT_HASH
+
 # Deploy API Gateway stacks
 if [ -d "$API_GATEWAYS_DIR" ]; then
   echo "Deploying API Gateway stacks..."
@@ -25,6 +27,9 @@ if [ -d "$API_GATEWAYS_DIR" ]; then
 
           if [ -f "$TEMPLATE_FILE" ]; then
             echo "Deploying API Gateway stack for endpoint '$ENDPOINT_NAME' and method '$METHOD_NAME'..."
+            
+            sed -i "s/COMMIT_HASH/$COMMIT_HASH/g" $TEMPLATE_FILE
+
             STACK_NAME="${STACK_NAME_PREFIX}-${METHOD_NAME}-${ENDPOINT_NAME}"
             aws cloudformation deploy \
               --template-file "$TEMPLATE_FILE" \

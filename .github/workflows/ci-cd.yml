@@ -63,6 +63,8 @@ jobs:
             chmod +x ./templates/bash_scripts/deploy_layers.sh
             ./templates/bash_scripts/deploy_layers.sh
         - name: Deploy API Gateway
+          env:
+            COMMIT_HASH: ${{ github.sha }}
           run: |
             chmod +x ./templates/bash_scripts/deploy_apigateways.sh
             ./templates/bash_scripts/deploy_apigateways.sh
