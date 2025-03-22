@@ -22,7 +22,7 @@ for function in "$FUNCTION_DIR"/*; do
         # Upload the packaged function to S3
         echo "Uploading function: $function_name"
         echo "Uploading method: $method_name"
-        aws s3 cp "$method/src/${method_name}-${function_name}.zip" "s3://$S3_BUCKET/lambda-functions/"
+        aws s3 cp "$method/src/${method_name}-${function_name}-$COMMIT_HASH.zip" "s3://$S3_BUCKET/lambda-functions/"
       fi
     done
   fi
