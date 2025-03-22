@@ -34,7 +34,7 @@ if [ -d "$API_GATEWAYS_DIR" ]; then
             aws cloudformation deploy \
               --template-file "$TEMPLATE_FILE" \
               --stack-name "$STACK_NAME" \
-              --parameter-overrides EndPoint="$ENDPOINT_NAME" MethodAPI="$METHOD_NAME" COMMIT_MESSAGE=$COMMIT_MESSAGE\
+              --parameter-overrides EndPoint="$ENDPOINT_NAME" MethodAPI="$METHOD_NAME" COMMIT_MESSAGE="$COMMIT_MESSAGE"\
               --capabilities CAPABILITY_IAM
           else
             echo "No template.yml found in $endpoint_dir"
