@@ -69,7 +69,7 @@ Resources:
     Type: AWS::Lambda::Alias
     Properties:
       FunctionName: !Ref LambdaFunction
-      FunctionVersion: !GetAtt LambdaVersion.Version
+      FunctionVersion: !GetAtt LambdaVersion|COMMIT_HASH|.Version
       Name: !Ref EnvironmentType
       Description: !Ref CommitMessage
   LambdaInvokePermission:
