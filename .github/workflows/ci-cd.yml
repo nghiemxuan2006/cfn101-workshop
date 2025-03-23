@@ -3,7 +3,8 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main
+      - dev
+      - test
 env:
   COMMIT_HASH: ${{ github.sha }}
   BRANCH_NAME: ${{ github.ref_name }}
