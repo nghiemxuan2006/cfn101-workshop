@@ -93,6 +93,9 @@ Resources:
       ResourceId: !Ref ApiGatewayResource
       RestApiId: !ImportValue RestApiId
       AuthorizationType: NONE
+      RequestParameters:
+        method.request.querystring.name: true
+        method.request.querystring.age: false
       Integration:
         Type: AWS
         IntegrationHttpMethod: POST
@@ -117,7 +120,7 @@ Resources:
     Properties:
       StageName: !Ref EnvironmentType
       DeploymentId: !Ref ApiGatewayDeployment
-      RestApiId: !ImportValue RestApiI
+      RestApiId: !ImportValue RestApiId
 
 # Outputs:
 #   ApiGatewayUrl:
