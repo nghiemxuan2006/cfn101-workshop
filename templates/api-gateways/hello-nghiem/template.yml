@@ -111,14 +111,7 @@ Resources:
     DependsOn: ApiGatewayMethod
     Properties:
       RestApiId: !ImportValue RestApiId
-    # Metadata:
-    #   DeploymentIdentifier: !Ref CommitMessage # Add a unique identifier
-  ApiGatewayStage:
-    Type: AWS::ApiGateway::Stage
-    Properties:
       StageName: !Ref EnvironmentType
-      DeploymentId: !Ref ApiGatewayDeployment
-      RestApiId: !ImportValue RestApiI
 
 # Outputs:
 #   ApiGatewayUrl:
