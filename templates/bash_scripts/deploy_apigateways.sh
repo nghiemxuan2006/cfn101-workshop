@@ -11,6 +11,8 @@ API_GATEWAYS_DIR="templates/api-gateways"
 
 echo $COMMIT_HASH
 
+echo $BRANCH_NAME
+
 # Deploy API Gateway stacks
 if [ -d "$API_GATEWAYS_DIR" ]; then
   echo "Deploying API Gateway stacks..."
