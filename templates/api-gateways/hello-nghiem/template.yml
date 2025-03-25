@@ -109,6 +109,16 @@ Resources:
         Type: AWS
         IntegrationHttpMethod: POST
         Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}:${EnvironmentType}/invocations
+        RequestTemplates:
+          application/json: |
+            {
+              "name": "$input.params('name')",
+              #if($input.params('age').matches("^[0-9]+$"))
+                "age": $input.params('age').toInt()
+              #else
+                "age": null
+              #end
+            }
         IntegrationResponses:
           - StatusCode: 200
             ResponseTemplates:
