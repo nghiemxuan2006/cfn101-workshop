@@ -114,7 +114,7 @@ Resources:
             {
               "name": "$input.params('name')",
               #if($input.params('age').matches("^[0-9]+$"))
-                "age": $input.params('age').toInt()
+                "age": $input.params('age')
               #else
                 "age": null
               #end
