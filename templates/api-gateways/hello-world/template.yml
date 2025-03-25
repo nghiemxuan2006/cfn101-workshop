@@ -89,10 +89,10 @@ Resources:
     Type: AWS::ApiGateway::RequestValidator
     Properties:
       RestApiId: !ImportValue RestApiId
-      Name: ValidateQueryString
+      Name: ValidateQueryStringHelloWorld
       ValidateRequestParameters: true
       ValidateRequestBody: false
-      
+
   ApiGatewayMethod:
     Type: AWS::ApiGateway::Method
     DependsOn: LambdaFunction
