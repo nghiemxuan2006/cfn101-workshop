@@ -84,6 +84,14 @@ Resources:
           - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApiId}/*/${MethodAPIUpper}/${EndPoint}
           - RestApiId: !ImportValue RestApiId
             MethodAPIUpper: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]
+            
+  ApiGatewayRequestValidator:
+    Type: AWS::ApiGateway::RequestValidator
+    Properties:
+      RestApiId: !ImportValue RestApiId
+      Name: ValidateQueryString
+      ValidateRequestParameters: true
+      ValidateRequestBody: false
 
   ApiGatewayMethod:
     Type: AWS::ApiGateway::Method
@@ -93,6 +101,7 @@ Resources:
       ResourceId: !Ref ApiGatewayResource
       RestApiId: !ImportValue RestApiId
       AuthorizationType: NONE
+      RequestValidatorId: !Ref ApiGatewayRequestValidator
       RequestParameters:
         method.request.querystring.name: true
         method.request.querystring.age: false
