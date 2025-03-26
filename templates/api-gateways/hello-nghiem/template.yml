@@ -100,13 +100,13 @@ Resources:
       ContentType: application/json
       Schema:
         $schema: "http://json-schema.org/draft-04/schema#"
-        title: "PersonModel"
-        type": "object"
+        title: PersonModel
+        type": object
         properties: 
           name: 
-            type: "string"
+            type: string
           age:
-            type: "integer"
+            type: integer
         required:
           - name
           
