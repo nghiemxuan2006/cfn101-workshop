@@ -103,12 +103,13 @@ Resources:
         title: PersonModel
         type: object
         properties: 
-          title: 
+          name: 
             type: string
           age:
             type: integer
         required:
-          - title
+          - name
+          - age
           
 
   ApiGatewayMethod:
