@@ -51,7 +51,7 @@ Resources:
       Role: !ImportValue LambdaExecutionRole
       Code:
         S3Bucket: my-bucket-bucket
-        S3Key: lambda-functions/get-hello-nghiem-|COMMIT_HASH|.zip
+        S3Key: lambda-functions/${MethodAPI}-${EndPoint}-|COMMIT_HASH|.zip
       Runtime: python3.12
       Environment:
         Variables:
@@ -89,9 +89,28 @@ Resources:
     Type: AWS::ApiGateway::RequestValidator
     Properties:
       RestApiId: !ImportValue RestApiId
-      Name: ValidateQueryString
-      ValidateRequestParameters: true
-      ValidateRequestBody: false       
+      Name: ValidateRequestBody
+      ValidateRequestParameters: false
+      ValidateRequestBody: true
+  ApiGatewayResponseModel:
+    Type: AWS::ApiGateway::Model
+    Properties:
+      RestApiId: !ImportValue RestApiId
+      Name: PersonModel
+      ContentType: application/json
+      Schema:
+        $schema: "http://json-schema.org/draft-04/schema#"
+        title: PersonModel
+        type: object
+        properties: 
+          name: 
+            type: string
+          age:
+            type: integer
+        required:
+          - name
+          - age
+          
 
   ApiGatewayMethod:
     Type: AWS::ApiGateway::Method
@@ -102,9 +121,8 @@ Resources:
       RestApiId: !ImportValue RestApiId
       AuthorizationType: NONE
       RequestValidatorId: !Ref ApiGatewayRequestValidator
-      RequestParameters:
-        method.request.querystring.name: true
-        method.request.querystring.age: false
+      RequestModels:
+        application/json: !Ref ApiGatewayResponseModel
       Integration:
         Type: AWS
         IntegrationHttpMethod: POST
@@ -113,12 +131,12 @@ Resources:
           # if have "", JSON parser will treat it as a string value, otherwise, it will be treated as a number
           application/json: |
             {
-              "name": "$input.params('name')",
-              #if($input.params('age').matches("^[0-9]+$"))
-                #if($input.params('age').startsWith("0") && $input.params('age').length() > 1)
-                  "age": "$input.params('age')"
+              "name": "$input.json('name')",
+              #if($input.json('age').matches("^[0-9]+$"))
+                #if($input.json('age').startsWith("0") && $input.json('age').length() > 1)
+                  "age": "$input.json('age')"
                 #else
-                  "age": $input.params('age')
+                  "age": $input.json('age')
                 #end
               #else
                 "age": null
@@ -127,16 +145,12 @@ Resources:
         IntegrationResponses:
           - StatusCode: 200
             ResponseTemplates:
-              application/json: |
-                #set($inputRoot = $input.path('$'))
-                {
-                  "name": "$inputRoot.name",
-                  "age": $inputRoot.age
-                }
+              application/json: Empty
       MethodResponses:
       - StatusCode: 200
         ResponseModels:
           application/json: Empty
+
   # ApiGatewayDeployment:
   #   Type: AWS::ApiGateway::Deployment
   #   DependsOn: ApiGatewayMethod
