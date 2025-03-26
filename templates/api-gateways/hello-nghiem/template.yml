@@ -99,7 +99,7 @@ Resources:
       Name: PersonModel
       ContentType: application/json
       Schema:
-        $schema: "http://json-schema.org/draft-04/schema#",
+        $schema: "http://json-schema.org/draft-04/schema#"
         title: "PersonModel"
         type": "object"
         properties: 
