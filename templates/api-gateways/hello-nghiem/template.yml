@@ -1,0 +1,53 @@
+Parameters:
+  CommitMessage:
+    Type: String
+  EndPoint:
+    Type: String
+    Default: hello-nghiem
+  InfrastructureName:
+    Type: String
+    Default: nx-vid
+  EnvironmentType:
+    Description: Specify the Environment type of the stack.
+    Type: String
+    Default: test
+    AllowedValues:
+      - dev
+      - test
+      - prod
+    ConstraintDescription: Specify either dev, test or prod.
+
+Resources:
+  ApiGatewayResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !ImportValue RestApiRootResourceId
+      RestApiId: !ImportValue RestApiId
+      PathPart: !Ref EndPoint
+  GetStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/get-${EndPoint}.yml
+      TimeoutInMinutes: 20
+      Parameters:
+        CommitMessage: !Ref CommitMessage
+        EndPoint: !Ref EndPoint
+        InfrastructureName: !Ref InfrastructureName
+        EnvironmentType: !Ref EnvironmentType
+        MethodAPI: get
+        ApiGatewayResourceId: !Ref ApiGatewayResource
+  PostStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/post-${EndPoint}.yml
+      TimeoutInMinutes: 20
+      Parameters:
+        CommitMessage: !Ref CommitMessage
+        EndPoint: !Ref EndPoint
+        InfrastructureName: !Ref InfrastructureName
+        EnvironmentType: !Ref EnvironmentType
+        MethodAPI: post
+        ApiGatewayResourceId: !Ref ApiGatewayResource
+        
+
+ 

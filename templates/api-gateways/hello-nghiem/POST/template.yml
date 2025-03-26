@@ -23,6 +23,8 @@ Parameters:
       - test
       - prod
     ConstraintDescription: Specify either dev, test or prod.
+  ApiGatewayResourceId:
+    Type: String
 
 Mappings:
   UpperCaseMethodAPI:
@@ -36,12 +38,12 @@ Mappings:
       Method: DELETE
 
 Resources:
-  ApiGatewayResource:
-    Type: AWS::ApiGateway::Resource
-    Properties:
-      ParentId: !ImportValue RestApiRootResourceId
-      RestApiId: !ImportValue RestApiId
-      PathPart: !Ref EndPoint
+  # ApiGatewayResource:
+  #   Type: AWS::ApiGateway::Resource
+  #   Properties:
+  #     ParentId: !ImportValue RestApiRootResourceId
+  #     RestApiId: !ImportValue RestApiId
+  #     PathPart: !Ref EndPoint
 
   LambdaFunction:
     Type: AWS::Lambda::Function
@@ -117,7 +119,7 @@ Resources:
     DependsOn: LambdaFunction
     Properties:
       HttpMethod: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]
-      ResourceId: !Ref ApiGatewayResource
+      ResourceId: !Ref ApiGatewayResourceId
       RestApiId: !ImportValue RestApiId
       AuthorizationType: NONE
       RequestValidatorId: !Ref ApiGatewayRequestValidator
