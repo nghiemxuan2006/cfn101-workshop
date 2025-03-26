@@ -92,6 +92,24 @@ Resources:
       Name: ValidateQueryString
       ValidateRequestParameters: true
       ValidateRequestBody: false
+  ApiGatewayResponseModel:
+    Type: AWS::ApiGateway::Model
+    Properties:
+      RestApiId: !ImportValue RestApiId
+      Name: PersonModel
+      ContentType: application/json
+      Schema:
+        $schema: "http://json-schema.org/draft-04/schema#",
+        title: "PersonModel"
+        type": "object"
+        properties: 
+          name: 
+            type: "string"
+          age:
+            type: "integer"
+        required:
+          - name
+          
 
   ApiGatewayMethod:
     Type: AWS::ApiGateway::Method
@@ -131,7 +149,7 @@ Resources:
       MethodResponses:
       - StatusCode: 200
         ResponseModels:
-          application/json: Empty
+          application/json: !Ref ApiGatewayResponseModel
 
   # ApiGatewayDeployment:
   #   Type: AWS::ApiGateway::Deployment
