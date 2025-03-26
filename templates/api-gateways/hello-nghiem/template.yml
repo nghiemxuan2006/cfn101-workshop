@@ -145,7 +145,12 @@ Resources:
         IntegrationResponses:
           - StatusCode: 200
             ResponseTemplates:
-              application/json: !Ref ApiGatewayResponseModel
+              application/json: |
+                #set($inputRoot = $input.path('$'))
+                {
+                  "name": "$inputRoot.name",
+                  "age": $inputRoot.age
+                }
       MethodResponses:
       - StatusCode: 200
         ResponseModels:
