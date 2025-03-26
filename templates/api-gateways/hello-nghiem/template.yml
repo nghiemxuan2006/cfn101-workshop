@@ -101,7 +101,7 @@ Resources:
       Schema:
         $schema: "http://json-schema.org/draft-04/schema#"
         title: PersonModel
-        type": object
+        type: object
         properties: 
           name: 
             type: string
