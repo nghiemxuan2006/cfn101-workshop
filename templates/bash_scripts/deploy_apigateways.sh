@@ -25,7 +25,7 @@ if [ -d "$API_GATEWAYS_DIR" ]; then
         if [ -d "$method_dir" ]; then
           METHOD_NAME=$(basename "$method_dir" | tr '[:upper:]' '[:lower:]')
           
-          TEMPLATE_FILE="$endpoint_dir/template.yml"
+          TEMPLATE_FILE="$method_dir/template.yml"
 
           if [ -f "$TEMPLATE_FILE" ]; then
             echo "Deploying API Gateway stack for endpoint '$ENDPOINT_NAME' and method '$METHOD_NAME'..."
