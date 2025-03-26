@@ -131,7 +131,7 @@ Resources:
           # if have "", JSON parser will treat it as a string value, otherwise, it will be treated as a number
           application/json: |
             {
-              "name": "$input.params('name')",
+              "title": "$input.params('name')",
               #if($input.params('age').matches("^[0-9]+$"))
                 #if($input.params('age').startsWith("0") && $input.params('age').length() > 1)
                   "age": "$input.params('age')"
