@@ -42,6 +42,10 @@ jobs:
         run: |
           chmod +x ./templates/bash_scripts/prepare_lambda.sh
           ./templates/bash_scripts/prepare_lambda.sh
+      - name: Upload Template files
+        run: |
+          chmod +x ./templates/bash_scripts/prepare_templates.sh
+          ./templates/bash_scripts/prepare_templates.sh
 
   deploy:
       runs-on: ubuntu-latest
