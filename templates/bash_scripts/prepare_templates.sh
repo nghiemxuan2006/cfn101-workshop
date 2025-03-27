@@ -23,7 +23,7 @@ if [ -d "$API_GATEWAYS_DIR" ]; then
     # echo $TEMPLATE_FILE
     # Replace placeholder in the template file
     sed -i "s/|COMMIT_HASH|/$COMMIT_HASH/g" "$TEMPLATE_FILE"
-    FOLDER_PATH = $(dirname "$TEMPLATE_FILE")
+    FOLDER_PATH=$(dirname "$TEMPLATE_FILE")
     echo $FOLDER_PATH
 
     # Upload the template file to S3
