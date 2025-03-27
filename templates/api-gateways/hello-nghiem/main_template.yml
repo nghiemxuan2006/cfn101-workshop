@@ -41,6 +41,7 @@ Resources:
         ApiGatewayResourceId: !Ref ApiGatewayResource
   PostHelloNghiemStack:
     Type: AWS::CloudFormation::Stack
+    DependsOn: GetHelloNghiemStack
     Properties:
       TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/hello-nghiem/POST/template.yml
       TimeoutInMinutes: 20
