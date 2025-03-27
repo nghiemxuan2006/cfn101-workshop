@@ -24,13 +24,12 @@ if [ -d "$API_GATEWAYS_DIR" ]; then
     # Replace placeholder in the template file
     sed -i "s/|COMMIT_HASH|/$COMMIT_HASH/g" "$TEMPLATE_FILE"
 
-    echo 
     # Upload the template file to S3
-    # aws s3 cp "$TEMPLATE_FILE" "s3://$S3_BUCKET_NAME/template.yml"
+    # aws s3 cp "$TEMPLATE_FILE" "s3://$S3_BUCKET_NAME/$STACK_NAME_PREFIX/$TEMPLATE_FILE"
   done
 else
   echo "API Gateways directory not found: $API_GATEWAYS_DIR"
   exit 1
 fi
 
-echo "All API Gateway stacks deployed successfully."
+echo "All Template files is uploaded successfully."
