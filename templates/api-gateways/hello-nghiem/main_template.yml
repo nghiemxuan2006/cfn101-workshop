@@ -51,6 +51,3 @@ Resources:
         EnvironmentType: !Ref EnvironmentType
         MethodAPI: post
         ApiGatewayResourceId: !Ref ApiGatewayResource
-        
-
- 
