@@ -5,6 +5,7 @@ set -e
 # Define variables
 STACK_NAME_PREFIX="nx-vid"
 API_GATEWAYS_DIR="templates/api-gateways"
+S3_BUCKET_NAME="my-bucket-bucket"
 
 echo $COMMIT_HASH
 echo $BRANCH_NAME
