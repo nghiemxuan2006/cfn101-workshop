@@ -11,6 +11,10 @@ for function in "$FUNCTION_DIR"/*; do
     for method in "$function"/*; do
       if [ -d "$method" ]; then
         method_name=$(basename "$method" | tr '[:upper:]' '[:lower:]')
+        if [[ "$method_name" != "get" && "$method_name" != "post" ]]; then
+          echo "Skipping method: $method_name"
+          continue
+        fi
         echo "Packaging function: $function_name"
         echo "Packaging method: $method_name"
 
