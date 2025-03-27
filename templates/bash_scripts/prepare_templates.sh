@@ -26,8 +26,20 @@ if [ -d "$API_GATEWAYS_DIR" ]; then
     FOLDER_PATH=$(dirname "$TEMPLATE_FILE")
     echo $FOLDER_PATH
 
+    # Example string
+    # path="templates/api-gateways/hello-nghiem/GET/template.yml"
+
+    # Set IFS to "/"
+    # IFS='/' read -ra parts <<< "$FOLDER_PATH"
+
+    # Access parts of the split string
+    # echo "First part: ${parts[0]}"  # templates
+    # echo "Second part: ${parts[1]}" # api-gateways
+    # echo "Third part: ${parts[2]}"  # hello-nghiem
+    # echo "Fourth part: ${parts[3]}" # GET
+
     # Upload the template file to S3
-    # aws s3 cp "$TEMPLATE_FILE" "s3://$S3_BUCKET_NAME/$STACK_NAME_PREFIX/$TEMPLATE_FILE"
+    aws s3 cp "$TEMPLATE_FILE" "s3://$S3_BUCKET_NAME/$STACK_NAME_PREFIX/$FOLDER_PATH/template.yml"
   done
 else
   echo "API Gateways directory not found: $API_GATEWAYS_DIR"

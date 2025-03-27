@@ -16,6 +16,9 @@ Parameters:
       - test
       - prod
     ConstraintDescription: Specify either dev, test or prod.
+  S3BucketName:
+    Type: String
+    Default: my-bucket-bucket
 
 Resources:
   ApiGatewayResource:
@@ -24,10 +27,10 @@ Resources:
       ParentId: !ImportValue RestApiRootResourceId
       RestApiId: !ImportValue RestApiId
       PathPart: !Ref EndPoint
-  GetStack:
+  GetHelloNghiemStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/get-${EndPoint}.yml
+      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/hello-nghiem/GET/template.yml
       TimeoutInMinutes: 20
       Parameters:
         CommitMessage: !Ref CommitMessage
@@ -36,10 +39,10 @@ Resources:
         EnvironmentType: !Ref EnvironmentType
         MethodAPI: get
         ApiGatewayResourceId: !Ref ApiGatewayResource
-  PostStack:
+  PostHelloNghiemStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/post-${EndPoint}.yml
+      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/hello-nghiem/POST/template.yml
       TimeoutInMinutes: 20
       Parameters:
         CommitMessage: !Ref CommitMessage
