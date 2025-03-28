@@ -21,12 +21,35 @@ Parameters:
     Default: my-bucket-bucket
 
 Resources:
+  # should be in main_template    
+  ApiGatewayRequestQueryStringValidator:
+    Type: AWS::ApiGateway::RequestValidator
+    Properties:
+      RestApiId: !ImportValue RestApiId
+      Name: ValidateQueryString
+      ValidateRequestParameters: true
+      ValidateRequestBody: false 
+  ApiGatewayRequestBodyValidator:
+    Type: AWS::ApiGateway::RequestValidator
+    Properties:
+      RestApiId: !ImportValue RestApiId
+      Name: ValidateRequestBody
+      ValidateRequestParameters: false
+      ValidateRequestBody: true
+  
   ApiGatewayResource:
     Type: AWS::ApiGateway::Resource
     Properties:
       ParentId: !ImportValue RestApiRootResourceId
       RestApiId: !ImportValue RestApiId
       PathPart: !Ref EndPoint
+  ApiGatewayStateResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayResource
+      RestApiId: !ImportValue RestApiId
+      PathPart: state
+  
   GetHelloNghiemStack:
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -39,6 +62,7 @@ Resources:
         EnvironmentType: !Ref EnvironmentType
         MethodAPI: get
         ApiGatewayResourceId: !Ref ApiGatewayResource
+        ApiGatewayRequestValidator: !Ref ApiGatewayRequestQueryStringValidator
   PostHelloNghiemStack:
     Type: AWS::CloudFormation::Stack
     DependsOn: GetHelloNghiemStack
@@ -52,6 +76,7 @@ Resources:
         EnvironmentType: !Ref EnvironmentType
         MethodAPI: post
         ApiGatewayResourceId: !Ref ApiGatewayResource
+        ApiGatewayRequestValidator: !Ref ApiGatewayRequestBodyValidator
   GetHelloNghiemStateStack:
     Type: AWS::CloudFormation::Stack
     DependsOn: PostHelloNghiemStack
@@ -60,8 +85,9 @@ Resources:
       TimeoutInMinutes: 20
       Parameters:
         CommitMessage: !Ref CommitMessage
-        EndPoint: hello-nghiem-state
+        EndPoint: hello-nghiem-state # this is name of function
         InfrastructureName: !Ref InfrastructureName
         EnvironmentType: !Ref EnvironmentType
         MethodAPI: get
-        ApiGatewayResourceId: !Ref ApiGatewayResource
+        ApiGatewayResourceId: !Ref ApiGatewayStateResource # this is endpoint
+        ApiGatewayRequestValidator: !Ref ApiGatewayRequestQueryStringValidator

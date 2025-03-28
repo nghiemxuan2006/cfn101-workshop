@@ -25,6 +25,8 @@ Parameters:
     ConstraintDescription: Specify either dev, test or prod.
   ApiGatewayResourceId:
     Type: String
+  ApiGatewayRequestValidator:
+    Type: String
 
 Mappings:
   UpperCaseMethodAPI:
@@ -87,13 +89,6 @@ Resources:
           - RestApiId: !ImportValue RestApiId
             MethodAPIUpper: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]
             
-  ApiGatewayRequestValidator:
-    Type: AWS::ApiGateway::RequestValidator
-    Properties:
-      RestApiId: !ImportValue RestApiId
-      Name: ValidateRequestBody
-      ValidateRequestParameters: false
-      ValidateRequestBody: true
   ApiGatewayResponseModel:
     Type: AWS::ApiGateway::Model
     Properties:
