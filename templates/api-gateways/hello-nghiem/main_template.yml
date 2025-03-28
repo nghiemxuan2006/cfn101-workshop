@@ -52,3 +52,16 @@ Resources:
         EnvironmentType: !Ref EnvironmentType
         MethodAPI: post
         ApiGatewayResourceId: !Ref ApiGatewayResource
+  GetHelloNghiemStateStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: PostHelloNghiemStack
+    Properties:
+      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/hello-nghiem/state/GET/template.yml
+      TimeoutInMinutes: 20
+      Parameters:
+        CommitMessage: !Ref CommitMessage
+        EndPoint: hello-nghiem-state
+        InfrastructureName: !Ref InfrastructureName
+        EnvironmentType: !Ref EnvironmentType
+        MethodAPI: get
+        ApiGatewayResourceId: !Ref ApiGatewayResource

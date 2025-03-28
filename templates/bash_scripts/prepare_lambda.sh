@@ -1,33 +1,37 @@
 FUNCTION_DIR="templates/api-gateways"
 S3_BUCKET="my-bucket-bucket"
 
-echo $SOURCE
-echo $BUILD_SOURCEVERSION
-echo $COMMIT_HASH
-# Package and upload Lambda functions
-for function in "$FUNCTION_DIR"/*; do
-  if [ -d "$function" ]; then
-    function_name=$(basename "$function")
-    for method in "$function"/*; do
-      if [ -d "$method" ]; then
-        method_name=$(basename "$method" | tr '[:upper:]' '[:lower:]')
-        if [[ "$method_name" != "get" && "$method_name" != "post" ]]; then
-          echo "Skipping method: $method_name"
-          continue
-        fi
+# Function to recursively process directories
+process_directory() {
+  local dir_path="$1"
+  local parent_name="$2"
+
+  for item in "$dir_path"/*; do
+    if [ -d "$item" ]; then
+      local item_name=$(basename "$item" | tr '[:upper:]' '[:lower:]')
+
+      # Check if the directory contains a "src" folder (indicating a Lambda function)
+      if [ -d "$item/src" ]; then
+        # Combine parent name and current item name for unique function identification
+        local function_name="$item_name-$parent_name"
+
         echo "Packaging function: $function_name"
-        echo "Packaging method: $method_name"
 
         # Package the Lambda function
-        cd "$method/src"
-        zip -r "${method_name}-${function_name}-$COMMIT_HASH.zip" .
+        cd "$item/src"
+        zip -r "${function_name}-$COMMIT_HASH.zip" .
         cd - > /dev/null
 
         # Upload the packaged function to S3
         echo "Uploading function: $function_name"
-        echo "Uploading method: $method_name"
-        aws s3 cp "$method/src/${method_name}-${function_name}-$COMMIT_HASH.zip" "s3://$S3_BUCKET/lambda-functions/"
+        aws s3 cp "$item/src/${function_name}-$COMMIT_HASH.zip" "s3://$S3_BUCKET/lambda-functions/"
+      else
+        # Recursively process subdirectories
+        process_directory "$item" "${parent_name:+$parent_name-}$item_name"
       fi
-    done
-  fi
-done
+    fi
+  done
+}
+
+# Start processing from the root FUNCTION_DIR
+process_directory "$FUNCTION_DIR"
