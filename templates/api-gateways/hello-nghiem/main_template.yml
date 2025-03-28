@@ -34,7 +34,7 @@ Resources:
       TimeoutInMinutes: 20
       Parameters:
         CommitMessage: !Ref CommitMessage
-        EndPoint: !Ref EndPoint
+        EndPoint: hello-nghiem
         InfrastructureName: !Ref InfrastructureName
         EnvironmentType: !Ref EnvironmentType
         MethodAPI: get
@@ -47,7 +47,7 @@ Resources:
       TimeoutInMinutes: 20
       Parameters:
         CommitMessage: !Ref CommitMessage
-        EndPoint: !Ref EndPoint
+        EndPoint: hello-nghiem
         InfrastructureName: !Ref InfrastructureName
         EnvironmentType: !Ref EnvironmentType
         MethodAPI: post
