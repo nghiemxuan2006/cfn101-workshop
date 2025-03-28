@@ -51,4 +51,4 @@ Resources:
         InfrastructureName: !Ref InfrastructureName
         EnvironmentType: !Ref EnvironmentType
         MethodAPI: post
-        ApiGatewayResourceId: !Ref ApiGatewayResource 
+        ApiGatewayResourceId: !Ref ApiGatewayResource
