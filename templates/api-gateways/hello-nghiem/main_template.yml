@@ -68,7 +68,7 @@ Resources:
     Type: AWS::CloudFormation::Stack
     DependsOn: GetHelloNghiemStack
     Properties:
-      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/${Endpoint}/POST/template.yml
+      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/${EndPoint}/POST/template.yml
       TimeoutInMinutes: 20
       Parameters:
         CommitMessage: !Ref CommitMessage
