@@ -5,6 +5,9 @@ Description: API Gateway configuration for the Lambda function integrated with t
 Parameters:
   CommitMessage:
     Type: String
+  LambdaFunctionFileName:
+    Type: String
+    Default: hello-nghiem
   EndPoint:
     Type: String
     Default: hello-nghiem
@@ -50,12 +53,12 @@ Resources:
   LambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: !Sub ${InfrastructureName}-${MethodAPI}-${EndPoint}
+      FunctionName: !Sub ${InfrastructureName}-${MethodAPI}-${LambdaFunctionFileName}
       Handler: lambda_function.handler
       Role: !ImportValue LambdaExecutionRole
       Code:
         S3Bucket: my-bucket-bucket
-        S3Key: !Sub lambda-functions/${MethodAPI}-${EndPoint}-|COMMIT_HASH|.zip
+        S3Key: !Sub lambda-functions/${MethodAPI}-${LambdaFunctionFileName}-|COMMIT_HASH|.zip
       Runtime: python3.12
       Environment:
         Variables:

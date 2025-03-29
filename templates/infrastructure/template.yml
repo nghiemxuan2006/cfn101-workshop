@@ -12,6 +12,24 @@ Resources:
     Properties:
       Name: !Sub ${InfrastructureName}-api
       Description: API Gateway for Lambda function
+  
+  # should be in infrastructure template    
+  ApiGatewayRequestQueryStringValidator:
+    Type: AWS::ApiGateway::RequestValidator
+    Properties:
+      RestApiId: !Ref ApiGateway
+      Name: ValidateQueryString
+      ValidateRequestParameters: true
+      ValidateRequestBody: false 
+  ApiGatewayRequestBodyValidator:
+    Type: AWS::ApiGateway::RequestValidator
+    Properties:
+      RestApiId: !Ref ApiGateway
+      Name: ValidateRequestBody
+      ValidateRequestParameters: false
+      ValidateRequestBody: true
+  
+
   LambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties: 
@@ -37,6 +55,14 @@ Resources:
                 Resource: "*"
 
 Outputs:
+  ApiGatewayRequestQueryStringValidator:
+    Value: !Ref ApiGatewayRequestQueryStringValidator
+    Export:
+      Name: ApiGatewayRequestQueryStringValidator
+  ApiGatewayRequestBodyValidator:
+    Value: !Ref ApiGatewayRequestBodyValidator
+    Export:
+      Name: ApiGatewayRequestBodyValidator
   RestApiId:
     Value: !Ref ApiGateway
     Export:

@@ -1,0 +1,50 @@
+Parameters:
+  CommitMessage:
+    Type: String
+  EndPoint:
+    Type: String
+    Default: hello-nghiem
+  InfrastructureName:
+    Type: String
+    Default: nx-vid
+  EnvironmentType:
+    Description: Specify the Environment type of the stack.
+    Type: String
+    Default: test
+    AllowedValues:
+      - dev
+      - test
+      - prod
+    ConstraintDescription: Specify either dev, test or prod.
+  S3BucketName:
+    Type: String
+    Default: my-bucket-bucket
+
+Resources:
+  ApiGatewayResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !ImportValue RestApiRootResourceId
+      RestApiId: !ImportValue RestApiId
+      PathPart: !Ref EndPoint
+  ApiGatewayStateResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayResource
+      RestApiId: !ImportValue RestApiId
+      PathPart: state
+  
+  GetHelloWorldStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/hello-world/GET/template.yml
+      TimeoutInMinutes: 20
+      Parameters:
+        CommitMessage: !Ref CommitMessage
+        EndPoint: hello-world
+        LambdaFunctionFileName: hello-world
+        InfrastructureName: !Ref InfrastructureName
+        EnvironmentType: !Ref EnvironmentType
+        MethodAPI: get
+        ApiGatewayResourceId: !Ref ApiGatewayResource
+        ApiGatewayRequestValidator: !ImportValue ApiGatewayRequestQueryStringValidator

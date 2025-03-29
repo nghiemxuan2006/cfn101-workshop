@@ -21,21 +21,21 @@ Parameters:
     Default: my-bucket-bucket
 
 Resources:
-  # should be in main_template    
-  ApiGatewayRequestQueryStringValidator:
-    Type: AWS::ApiGateway::RequestValidator
-    Properties:
-      RestApiId: !ImportValue RestApiId
-      Name: ValidateQueryString
-      ValidateRequestParameters: true
-      ValidateRequestBody: false 
-  ApiGatewayRequestBodyValidator:
-    Type: AWS::ApiGateway::RequestValidator
-    Properties:
-      RestApiId: !ImportValue RestApiId
-      Name: ValidateRequestBody
-      ValidateRequestParameters: false
-      ValidateRequestBody: true
+  # # should be in main_template    
+  # ApiGatewayRequestQueryStringValidator:
+  #   Type: AWS::ApiGateway::RequestValidator
+  #   Properties:
+  #     RestApiId: !ImportValue RestApiId
+  #     Name: ValidateQueryString
+  #     ValidateRequestParameters: true
+  #     ValidateRequestBody: false 
+  # ApiGatewayRequestBodyValidator:
+  #   Type: AWS::ApiGateway::RequestValidator
+  #   Properties:
+  #     RestApiId: !ImportValue RestApiId
+  #     Name: ValidateRequestBody
+  #     ValidateRequestParameters: false
+  #     ValidateRequestBody: true
   
   ApiGatewayResource:
     Type: AWS::ApiGateway::Resource
@@ -58,11 +58,12 @@ Resources:
       Parameters:
         CommitMessage: !Ref CommitMessage
         EndPoint: hello-nghiem
+        LambdaFunctionFileName: hello-nghiem
         InfrastructureName: !Ref InfrastructureName
         EnvironmentType: !Ref EnvironmentType
         MethodAPI: get
         ApiGatewayResourceId: !Ref ApiGatewayResource
-        ApiGatewayRequestValidator: !Ref ApiGatewayRequestQueryStringValidator
+        ApiGatewayRequestValidator: !ImportValue ApiGatewayRequestQueryStringValidator
   PostHelloNghiemStack:
     Type: AWS::CloudFormation::Stack
     DependsOn: GetHelloNghiemStack
@@ -72,11 +73,12 @@ Resources:
       Parameters:
         CommitMessage: !Ref CommitMessage
         EndPoint: hello-nghiem
+        LambdaFunctionFileName: hello-nghiem
         InfrastructureName: !Ref InfrastructureName
         EnvironmentType: !Ref EnvironmentType
         MethodAPI: post
         ApiGatewayResourceId: !Ref ApiGatewayResource
-        ApiGatewayRequestValidator: !Ref ApiGatewayRequestBodyValidator
+        ApiGatewayRequestValidator: !ImportValue ApiGatewayRequestBodyValidator
   GetHelloNghiemStateStack:
     Type: AWS::CloudFormation::Stack
     DependsOn: PostHelloNghiemStack
@@ -85,9 +87,10 @@ Resources:
       TimeoutInMinutes: 20
       Parameters:
         CommitMessage: !Ref CommitMessage
-        EndPoint: hello-nghiem-state # this is name of function
+        EndPoint: hello-nghiem/state
+        LambdaFunctionFileName: hello-nghiem-state # this is name of function
         InfrastructureName: !Ref InfrastructureName
         EnvironmentType: !Ref EnvironmentType
         MethodAPI: get
         ApiGatewayResourceId: !Ref ApiGatewayStateResource # this is endpoint
-        ApiGatewayRequestValidator: !Ref ApiGatewayRequestQueryStringValidator
+        ApiGatewayRequestValidator: !ImportValue ApiGatewayRequestQueryStringValidator
