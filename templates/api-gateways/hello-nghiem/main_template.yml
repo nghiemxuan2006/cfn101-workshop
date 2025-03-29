@@ -83,12 +83,12 @@ Resources:
     Type: AWS::CloudFormation::Stack
     DependsOn: PostHelloNghiemStack
     Properties:
-      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/${Endpoint}/state/GET/template.yml
+      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/${EndPoint}/state/GET/template.yml
       TimeoutInMinutes: 20
       Parameters:
         CommitMessage: !Ref CommitMessage
-        EndPoint: !Sub ${Endpoint}/state
-        LambdaFunctionFileName: !Sub ${Endpoint}-state # this is name of function
+        EndPoint: !Sub ${EndPoint}/state
+        LambdaFunctionFileName: !Sub ${EndPoint}-state # this is name of function
         InfrastructureName: !Ref InfrastructureName
         EnvironmentType: !Ref EnvironmentType
         MethodAPI: get
