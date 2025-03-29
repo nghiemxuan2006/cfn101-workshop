@@ -27,22 +27,16 @@ Resources:
       ParentId: !ImportValue RestApiRootResourceId
       RestApiId: !ImportValue RestApiId
       PathPart: !Ref EndPoint
-  ApiGatewayStateResource:
-    Type: AWS::ApiGateway::Resource
-    Properties:
-      ParentId: !Ref ApiGatewayResource
-      RestApiId: !ImportValue RestApiId
-      PathPart: state
   
   GetHelloWorldStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/hello-world/GET/template.yml
+      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/${Endpoint}/GET/template.yml
       TimeoutInMinutes: 20
       Parameters:
         CommitMessage: !Ref CommitMessage
-        EndPoint: hello-world
-        LambdaFunctionFileName: hello-world
+        EndPoint: !Ref EndPoint
+        LambdaFunctionFileName: !Ref EndPoint
         InfrastructureName: !Ref InfrastructureName
         EnvironmentType: !Ref EnvironmentType
         MethodAPI: get

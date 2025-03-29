@@ -53,12 +53,12 @@ Resources:
   GetHelloNghiemStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/hello-nghiem/GET/template.yml
+      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/${EndPoint}/GET/template.yml
       TimeoutInMinutes: 20
       Parameters:
         CommitMessage: !Ref CommitMessage
-        EndPoint: hello-nghiem
-        LambdaFunctionFileName: hello-nghiem
+        EndPoint: !Ref EndPoint
+        LambdaFunctionFileName: !Ref EndPoint
         InfrastructureName: !Ref InfrastructureName
         EnvironmentType: !Ref EnvironmentType
         MethodAPI: get
@@ -68,12 +68,12 @@ Resources:
     Type: AWS::CloudFormation::Stack
     DependsOn: GetHelloNghiemStack
     Properties:
-      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/hello-nghiem/POST/template.yml
+      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/${Endpoint}/POST/template.yml
       TimeoutInMinutes: 20
       Parameters:
         CommitMessage: !Ref CommitMessage
-        EndPoint: hello-nghiem
-        LambdaFunctionFileName: hello-nghiem
+        EndPoint: !Ref EndPoint
+        LambdaFunctionFileName: !Ref EndPoint
         InfrastructureName: !Ref InfrastructureName
         EnvironmentType: !Ref EnvironmentType
         MethodAPI: post
@@ -83,12 +83,12 @@ Resources:
     Type: AWS::CloudFormation::Stack
     DependsOn: PostHelloNghiemStack
     Properties:
-      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/hello-nghiem/state/GET/template.yml
+      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/${Endpoint}/state/GET/template.yml
       TimeoutInMinutes: 20
       Parameters:
         CommitMessage: !Ref CommitMessage
-        EndPoint: hello-nghiem/state
-        LambdaFunctionFileName: hello-nghiem-state # this is name of function
+        EndPoint: !Sub ${Endpoint}/state
+        LambdaFunctionFileName: !Sub ${Endpoint}-state # this is name of function
         InfrastructureName: !Ref InfrastructureName
         EnvironmentType: !Ref EnvironmentType
         MethodAPI: get
