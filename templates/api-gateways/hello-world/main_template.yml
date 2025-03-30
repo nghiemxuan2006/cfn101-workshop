@@ -30,7 +30,7 @@ Resources:
   ApiGatewayTypeResource:
     Type: AWS::ApiGateway::Resource
     Properties:
-      ParentId: !ImportValue RestApiRootResourceId
+      ParentId: !Ref ApiGatewayResource
       RestApiId: !ImportValue RestApiId
       PathPart: "{type}"
   
