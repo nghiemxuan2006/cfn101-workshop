@@ -7,10 +7,8 @@ Parameters:
     Type: String
   LambdaFunctionFileName:
     Type: String
-    Default: hello-nghiem
   EndPoint:
     Type: String
-    Default: hello-nghiem
   MethodAPI:
     Type: String
     Default: get

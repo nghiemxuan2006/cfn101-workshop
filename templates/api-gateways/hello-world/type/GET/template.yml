@@ -41,12 +41,6 @@ Mappings:
       Method: DELETE
 
 Resources:
-  # ApiGatewayResource:
-  #   Type: AWS::ApiGateway::Resource
-  #   Properties:
-  #     ParentId: !ImportValue RestApiRootResourceId
-  #     RestApiId: !ImportValue RestApiId
-  #     PathPart: !Ref EndPoint
 
   LambdaFunction:
     Type: AWS::Lambda::Function
@@ -56,14 +50,13 @@ Resources:
       Role: !ImportValue LambdaExecutionRole
       Code:
         S3Bucket: my-bucket-bucket
-        S3Key:  !Sub lambda-functions/${MethodAPI}-${LambdaFunctionFileName}-|COMMIT_HASH|.zip
+        S3Key: !Sub lambda-functions/${MethodAPI}-${LambdaFunctionFileName}-|COMMIT_HASH|.zip
       Runtime: python3.12
       Environment:
         Variables:
           ENV_TYPE: !Ref EnvironmentType
       Layers:
-        - !ImportValue pandas-layer
-
+        - !ImportValue numpy-layer
   LambdaVersion|COMMIT_HASH|:
     Type: AWS::Lambda::Version
     DeletionPolicy: Retain
@@ -75,8 +68,9 @@ Resources:
     Properties:
       FunctionName: !Ref LambdaFunction
       FunctionVersion: !GetAtt LambdaVersion|COMMIT_HASH|.Version
-      Name: !Ref EnvironmentType
       Description: !Ref CommitMessage
+      Name: !Ref EnvironmentType
+
   LambdaInvokePermission:
     Type: AWS::Lambda::Permission
     DependsOn: LambdaAlias
@@ -88,7 +82,7 @@ Resources:
         Fn::Sub: 
           - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApiId}/*/${MethodAPIUpper}/${EndPoint}
           - RestApiId: !ImportValue RestApiId
-            MethodAPIUpper: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]      
+            MethodAPIUpper: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]
 
   ApiGatewayMethod:
     Type: AWS::ApiGateway::Method
@@ -100,46 +94,26 @@ Resources:
       AuthorizationType: NONE
       RequestValidatorId: !Ref ApiGatewayRequestValidator
       RequestParameters:
-        method.request.querystring.name: true
-        method.request.querystring.age: false
+        method.request.path.type: true
       Integration:
         Type: AWS
         IntegrationHttpMethod: POST
         Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}:${EnvironmentType}/invocations
-        RequestTemplates:
-          # if have "", JSON parser will treat it as a string value, otherwise, it will be treated as a number
-          application/json: |
-            {
-              "name": "$input.params('name')",
-              #if($input.params('age').matches("^[0-9]+$"))
-                #if($input.params('age').startsWith("0") && $input.params('age').length() > 1)
-                  "age": "$input.params('age')"
-                #else
-                  "age": $input.params('age')
-                #end
-              #else
-                "age": null
-              #end
-            }
         IntegrationResponses:
           - StatusCode: 200
             ResponseTemplates:
-              application/json: |
-                #set($inputRoot = $input.path('$'))
-                {
-                  "name": "$inputRoot.name",
-                  "age": $inputRoot.age,
-                  "status": $inputRoot.status
-                }
+              application/json: ""
       MethodResponses:
       - StatusCode: 200
         ResponseModels:
           application/json: Empty
+
   # ApiGatewayDeployment:
   #   Type: AWS::ApiGateway::Deployment
   #   DependsOn: ApiGatewayMethod
   #   Properties:
   #     RestApiId: !ImportValue RestApiId
+
   # ApiGatewayStage:
   #   Type: AWS::ApiGateway::Stage
   #   Properties:

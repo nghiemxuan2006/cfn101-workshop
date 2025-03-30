@@ -27,6 +27,12 @@ Resources:
       ParentId: !ImportValue RestApiRootResourceId
       RestApiId: !ImportValue RestApiId
       PathPart: !Ref EndPoint
+  ApiGatewayTypeResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !ImportValue RestApiRootResourceId
+      RestApiId: !ImportValue RestApiId
+      PathPart: "{type}"
   
   GetHelloWorldStack:
     Type: AWS::CloudFormation::Stack
@@ -41,4 +47,18 @@ Resources:
         EnvironmentType: !Ref EnvironmentType
         MethodAPI: get
         ApiGatewayResourceId: !Ref ApiGatewayResource
+        ApiGatewayRequestValidator: !ImportValue ApiGatewayRequestQueryStringValidator
+  GetTypeParameterStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/${EndPoint}/type/GET/template.yml
+      TimeoutInMinutes: 20
+      Parameters:
+        CommitMessage: !Ref CommitMessage
+        EndPoint: !Sub ${EndPoint}/{type}
+        LambdaFunctionFileName: !Sub ${EndPoint}-type
+        InfrastructureName: !Ref InfrastructureName
+        EnvironmentType: !Ref EnvironmentType
+        MethodAPI: get
+        ApiGatewayResourceId: !Ref ApiGatewayTypeResource
         ApiGatewayRequestValidator: !ImportValue ApiGatewayRequestQueryStringValidator
