@@ -21,22 +21,6 @@ Parameters:
     Default: my-bucket-bucket
 
 Resources:
-  # # should be in main_template    
-  # ApiGatewayRequestQueryStringValidator:
-  #   Type: AWS::ApiGateway::RequestValidator
-  #   Properties:
-  #     RestApiId: !ImportValue RestApiId
-  #     Name: ValidateQueryString
-  #     ValidateRequestParameters: true
-  #     ValidateRequestBody: false 
-  # ApiGatewayRequestBodyValidator:
-  #   Type: AWS::ApiGateway::RequestValidator
-  #   Properties:
-  #     RestApiId: !ImportValue RestApiId
-  #     Name: ValidateRequestBody
-  #     ValidateRequestParameters: false
-  #     ValidateRequestBody: true
-  
   ApiGatewayResource:
     Type: AWS::ApiGateway::Resource
     Properties:
@@ -66,7 +50,6 @@ Resources:
         ApiGatewayRequestValidator: !ImportValue ApiGatewayRequestQueryStringValidator
   PostHelloNghiemStack:
     Type: AWS::CloudFormation::Stack
-    DependsOn: GetHelloNghiemStack
     Properties:
       TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/${EndPoint}/POST/template.yml
       TimeoutInMinutes: 20
@@ -81,7 +64,6 @@ Resources:
         ApiGatewayRequestValidator: !ImportValue ApiGatewayRequestBodyValidator
   GetHelloNghiemStateStack:
     Type: AWS::CloudFormation::Stack
-    DependsOn: PostHelloNghiemStack
     Properties:
       TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/${EndPoint}/state/GET/template.yml
       TimeoutInMinutes: 20
@@ -94,3 +76,18 @@ Resources:
         MethodAPI: get
         ApiGatewayResourceId: !Ref ApiGatewayStateResource # this is endpoint
         ApiGatewayRequestValidator: !ImportValue ApiGatewayRequestQueryStringValidator
+  
+  ApiGatewayDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: 
+      - GetHelloNghiemStack
+      - PostHelloNghiemStack
+      - GetHelloNghiemStateStack
+    Properties:
+      RestApiId: !ImportValue RestApiId
+  ApiGatewayStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      StageName: !Ref EnvironmentType
+      DeploymentId: !Ref ApiGatewayDeployment
+      RestApiId: !ImportValue RestApiId
