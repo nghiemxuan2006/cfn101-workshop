@@ -63,16 +63,12 @@ Resources:
         ApiGatewayResourceId: !Ref ApiGatewayTypeResource
         ApiGatewayRequestValidator: !ImportValue ApiGatewayRequestQueryStringValidator
 
-  # ApiGatewayDeployment:
-  #   Type: AWS::ApiGateway::Deployment
-  #   DependsOn: 
-  #     - GetHelloWorldStack
-  #     - GetTypeParameterStack
-  #   Properties:
-  #     RestApiId: !ImportValue RestApiId
-  # ApiGatewayStage:
-  #   Type: AWS::ApiGateway::Stage
-  #   Properties:
-  #     StageName: !Ref EnvironmentType
-  #     DeploymentId: !Ref ApiGatewayDeployment
-  #     RestApiId: !ImportValue RestApiId
+  ApiGatewayDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: 
+      - GetHelloWorldStack
+      - GetTypeParameterStack
+    Properties:
+      RestApiId: !ImportValue RestApiId
+      StageName: !Ref EnvironmentType
+      Description: !Ref CommitMessage
