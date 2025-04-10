@@ -62,13 +62,7 @@ Resources:
                   - "logs:CreateLogStream"
                   - "logs:PutLogEvents"
                 Resource: "*"
-      
-  ApiGatewayStage:
-    Type: AWS::ApiGateway::Stage
-    Properties:
-      StageName: !Ref EnvironmentType
-      RestApiId: !Ref ApiGateway
-
+                
 Outputs:
   ApiGatewayRequestQueryStringValidator:
     Value: !Ref ApiGatewayRequestQueryStringValidator
