@@ -77,17 +77,17 @@ Resources:
         ApiGatewayResourceId: !Ref ApiGatewayStateResource # this is endpoint
         ApiGatewayRequestValidator: !ImportValue ApiGatewayRequestQueryStringValidator
   
-  # ApiGatewayDeployment:
-  #   Type: AWS::ApiGateway::Deployment
-  #   DependsOn: 
-  #     - GetHelloNghiemStack
-  #     - PostHelloNghiemStack
-  #     - GetHelloNghiemStateStack
-  #   Properties:
-  #     RestApiId: !ImportValue RestApiId
-  # ApiGatewayStage:
-  #   Type: AWS::ApiGateway::Stage
-  #   Properties:
-  #     StageName: !Ref EnvironmentType
-  #     DeploymentId: !Ref ApiGatewayDeployment
-  #     RestApiId: !ImportValue RestApiId
+  ApiGatewayDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: 
+      - GetHelloNghiemStack
+      - PostHelloNghiemStack
+      - GetHelloNghiemStateStack
+    Properties:
+      RestApiId: !ImportValue RestApiId
+  ApiGatewayStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      StageName: !Ref EnvironmentType
+      DeploymentId: !Ref ApiGatewayDeployment
+      RestApiId: !ImportValue RestApiId
