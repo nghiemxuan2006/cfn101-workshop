@@ -85,9 +85,4 @@ Resources:
       - GetHelloNghiemStateStack
     Properties:
       RestApiId: !ImportValue RestApiId
-  ApiGatewayStage:
-    Type: AWS::ApiGateway::Stage
-    Properties:
       StageName: !Ref EnvironmentType
-      DeploymentId: !Ref ApiGatewayDeployment
-      RestApiId: !ImportValue RestApiId

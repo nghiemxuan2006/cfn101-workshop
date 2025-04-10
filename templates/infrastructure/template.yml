@@ -5,6 +5,15 @@ Parameters:
   InfrastructureName:
     Type: String
     Default: nx-vid
+  EnvironmentType:
+    Description: Specify the Environment type of the stack.
+    Type: String
+    Default: test
+    AllowedValues:
+      - dev
+      - test
+      - prod
+    ConstraintDescription: Specify either dev, test or prod.
 
 Resources:
   ApiGateway:
@@ -53,6 +62,12 @@ Resources:
                   - "logs:CreateLogStream"
                   - "logs:PutLogEvents"
                 Resource: "*"
+      
+  ApiGatewayStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      StageName: !Ref EnvironmentType
+      RestApiId: !Ref ApiGateway
 
 Outputs:
   ApiGatewayRequestQueryStringValidator:
