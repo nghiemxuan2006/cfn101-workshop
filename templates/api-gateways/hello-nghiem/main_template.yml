@@ -74,7 +74,7 @@ Resources:
         InfrastructureName: !Ref InfrastructureName
         EnvironmentType: !Ref EnvironmentType
         MethodAPI: get
-        ApiGatewayResourceId: !Ref ApiGatewayStateResource # this is endpoint
+        ApiGatewayResourceId: !Ref ApiGatewayStateResource # this is endpoint 
         ApiGatewayRequestValidator: !ImportValue ApiGatewayRequestQueryStringValidator
   
   ApiGatewayDeployment:
