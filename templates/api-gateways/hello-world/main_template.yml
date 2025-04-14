@@ -24,16 +24,16 @@ Resources:
   ApiGatewayResource:
     Type: AWS::ApiGateway::Resource
     Properties:
-      ParentId: !ImportValue 
+      ParentId: Fn::ImportValue: 
         !Sub RestApiRootResourceId-${EnvironmentType}
-      RestApiId: !ImportValue 
+      RestApiId: Fn::ImportValue: 
         !Sub RestApiId-${EnvironmentType}
       PathPart: !Ref EndPoint
   ApiGatewayTypeResource:
     Type: AWS::ApiGateway::Resource
     Properties:
       ParentId: !Ref ApiGatewayResource
-      RestApiId: !ImportValue 
+      RestApiId: Fn::ImportValue: 
         !Sub RestApiId-${EnvironmentType}
       PathPart: "{type}"
   
@@ -50,7 +50,7 @@ Resources:
         EnvironmentType: !Ref EnvironmentType
         MethodAPI: get
         ApiGatewayResourceId: !Ref ApiGatewayResource
-        ApiGatewayRequestValidator: !ImportValue 
+        ApiGatewayRequestValidator: Fn::ImportValue: 
           !Sub ApiGatewayRequestQueryStringValidator-${EnvironmentType}
   GetTypeParameterStack:
     Type: AWS::CloudFormation::Stack
@@ -65,7 +65,7 @@ Resources:
         EnvironmentType: !Ref EnvironmentType
         MethodAPI: get
         ApiGatewayResourceId: !Ref ApiGatewayTypeResource
-        ApiGatewayRequestValidator: !ImportValue 
+        ApiGatewayRequestValidator: Fn::ImportValue: 
           !Sub ApiGatewayRequestQueryStringValidator-${EnvironmentType}
 
   ApiGatewayDeployment:
@@ -74,7 +74,7 @@ Resources:
       - GetHelloWorldStack
       - GetTypeParameterStack
     Properties:
-      RestApiId: !ImportValue 
+      RestApiId: Fn::ImportValue: 
         !Sub RestApiId-${EnvironmentType}
       StageName: !Ref EnvironmentType
       Description: !Ref CommitMessage 
