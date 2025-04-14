@@ -67,24 +67,24 @@ Outputs:
   ApiGatewayRequestQueryStringValidator:
     Value: !Ref ApiGatewayRequestQueryStringValidator
     Export:
-      Name: ApiGatewayRequestQueryStringValidator-${EnvironmentType}
+      Name: !Sub ApiGatewayRequestQueryStringValidator-${EnvironmentType}
   ApiGatewayRequestBodyValidator:
     Value: !Ref ApiGatewayRequestBodyValidator
     Export:
-      Name: ApiGatewayRequestBodyValidator-${EnvironmentType}
+      Name: !Sub ApiGatewayRequestBodyValidator-${EnvironmentType}
   RestApiId:
     Value: !Ref ApiGateway
     Export:
-      Name: RestApiId-${EnvironmentType}
+      Name: !Sub RestApiId-${EnvironmentType}
   RestApiRootResourceId:
     Value: !GetAtt ApiGateway.RootResourceId
     Export:
-      Name: RestApiRootResourceId-${EnvironmentType}
+      Name: !Sub RestApiRootResourceId-${EnvironmentType}
   LambdaExecutionRole:
     Value: !GetAtt LambdaExecutionRole.Arn
     Export:
-      Name: LambdaExecutionRole-${EnvironmentType}
+      Name: !Sub LambdaExecutionRole-${EnvironmentType}
   InfrastructureName:
     Value: !Ref InfrastructureName
     Export:
-      Name: InfrastructureName-${EnvironmentType}
+      Name: !Sub InfrastructureName-${EnvironmentType}
