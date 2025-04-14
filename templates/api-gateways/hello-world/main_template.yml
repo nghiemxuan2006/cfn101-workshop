@@ -24,19 +24,20 @@ Resources:
   ApiGatewayResource:
     Type: AWS::ApiGateway::Resource
     Properties:
-      ParentId: Fn::ImportValue
-        !Sub "RestApiRootResourceId-${EnvironmentType}"
-      RestApiId: Fn::ImportValue
-        !Sub "RestApiId-${EnvironmentType}"
+      ParentId: !ImportValue
+        Fn::Sub: RestApiRootResourceId-${EnvironmentType} # Corrected syntax
+      RestApiId: !ImportValue
+        Fn::Sub: RestApiId-${EnvironmentType}             # Corrected syntax
       PathPart: !Ref EndPoint
+
   ApiGatewayTypeResource:
     Type: AWS::ApiGateway::Resource
     Properties:
       ParentId: !Ref ApiGatewayResource
-      RestApiId: Fn::ImportValue
-        !Sub "RestApiId-${EnvironmentType}"
+      RestApiId: !ImportValue
+        Fn::Sub: RestApiId-${EnvironmentType}             # Corrected syntax
       PathPart: "{type}"
-  
+
   GetHelloWorldStack:
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -50,8 +51,9 @@ Resources:
         EnvironmentType: !Ref EnvironmentType
         MethodAPI: get
         ApiGatewayResourceId: !Ref ApiGatewayResource
-        ApiGatewayRequestValidator: Fn::ImportValue
-          !Sub "ApiGatewayRequestQueryStringValidator-${EnvironmentType}"
+        ApiGatewayRequestValidator: !ImportValue
+          Fn::Sub: ApiGatewayRequestQueryStringValidator-${EnvironmentType} # Corrected syntax
+
   GetTypeParameterStack:
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -65,8 +67,8 @@ Resources:
         EnvironmentType: !Ref EnvironmentType
         MethodAPI: get
         ApiGatewayResourceId: !Ref ApiGatewayTypeResource
-        ApiGatewayRequestValidator: Fn::ImportValue
-          !Sub "ApiGatewayRequestQueryStringValidator-${EnvironmentType}"
+        ApiGatewayRequestValidator: !ImportValue
+          Fn::Sub: ApiGatewayRequestQueryStringValidator-${EnvironmentType} # Corrected syntax
 
   ApiGatewayDeployment:
     Type: AWS::ApiGateway::Deployment
@@ -74,7 +76,7 @@ Resources:
       - GetHelloWorldStack
       - GetTypeParameterStack
     Properties:
-      RestApiId: Fn::ImportValue
-        !Sub "RestApiId-${EnvironmentType}"
+      RestApiId: !ImportValue
+        Fn::Sub: RestApiId-${EnvironmentType}             # Corrected syntax
       StageName: !Ref EnvironmentType
-      Description: !Ref CommitMessage 
+      Description: !Ref CommitMessage
