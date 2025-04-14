@@ -67,7 +67,7 @@ jobs:
             echo "Deploying main infrastructure stack..."
             aws cloudformation deploy \
               --template-file templates/infrastructure/template.yml \
-              --stack-name nx-vid-infrastructure-stack \
+              --stack-name nx-vid-infrastructure-${{ env.BRANCH_NAME }}-stack \
               --parameter-overrides EnvironmentType="${{ env.BRANCH_NAME }}" \
               --capabilities CAPABILITY_IAM
         - name: Deploy Layers
