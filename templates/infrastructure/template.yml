@@ -19,7 +19,7 @@ Resources:
   ApiGateway:
     Type: AWS::ApiGateway::RestApi
     Properties:
-      Name: !Sub ${InfrastructureName}-api
+      Name: !Sub ${InfrastructureName}-api-${EnvironmentType}
       Description: API Gateway for Lambda function
   
   # should be in infrastructure template    
