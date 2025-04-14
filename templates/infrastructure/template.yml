@@ -72,7 +72,7 @@ Outputs:
     Value: !Ref ApiGatewayRequestBodyValidator
     Export:
       Name: ApiGatewayRequestBodyValidator-${EnvironmentType}
-  RestApiId${EnvironmentType}:
+  RestApiId:
     Value: !Ref ApiGateway
     Export:
       Name: RestApiId-${EnvironmentType}
