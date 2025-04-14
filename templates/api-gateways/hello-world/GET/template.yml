@@ -47,7 +47,8 @@ Resources:
     Properties:
       FunctionName: !Sub ${InfrastructureName}-${MethodAPI}-${LambdaFunctionFileName}
       Handler: lambda_function.handler
-      Role: !ImportValue LambdaExecutionRole
+      Role: !ImportValue 
+        Fn::Sub: LambdaExecutionRole-${EnvironmentType}
       Code:
         S3Bucket: my-bucket-bucket
         S3Key: !Sub lambda-functions/${MethodAPI}-${LambdaFunctionFileName}-|COMMIT_HASH|.zip
@@ -81,7 +82,8 @@ Resources:
       SourceArn: 
         Fn::Sub: 
           - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApiId}/*/${MethodAPIUpper}/${EndPoint}
-          - RestApiId: !ImportValue RestApiId
+          - RestApiId: !ImportValue 
+              Fn::Sub: RestApiId-${EnvironmentType}
             MethodAPIUpper: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]
 
   ApiGatewayMethod:
@@ -90,7 +92,8 @@ Resources:
     Properties:
       HttpMethod: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]
       ResourceId: !Ref ApiGatewayResourceId
-      RestApiId: !ImportValue RestApiId
+      RestApiId: !ImportValue
+        Fn::Sub: RestApiId-${EnvironmentType}
       AuthorizationType: NONE
       RequestValidatorId: !Ref ApiGatewayRequestValidator
       RequestParameters:
@@ -108,21 +111,3 @@ Resources:
       - StatusCode: 200
         ResponseModels:
           application/json: Empty
-
-  # ApiGatewayDeployment:
-  #   Type: AWS::ApiGateway::Deployment
-  #   DependsOn: ApiGatewayMethod
-  #   Properties:
-  #     RestApiId: !ImportValue RestApiId
-
-  # ApiGatewayStage:
-  #   Type: AWS::ApiGateway::Stage
-  #   Properties:
-  #     StageName: !Ref EnvironmentType
-  #     DeploymentId: !Ref ApiGatewayDeployment
-  #     RestApiId: !ImportValue RestApiId
-
-# Outputs:
-#   ApiGatewayUrl:
-#     Description: URL of the API Gateway
-#     Value: !Sub https://${RestApiId}.execute-api.${AWS::Region}.amazonaws.com/${EnvironmentType}/${EndPoint} 
