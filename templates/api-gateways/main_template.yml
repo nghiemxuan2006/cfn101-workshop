@@ -41,4 +41,3 @@ Outputs:
     Value: !Ref ApiGatewayRequestBodyValidator
     Export:
       Name: ApiGatewayRequestBodyValidator
-      
