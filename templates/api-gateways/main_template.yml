@@ -20,14 +20,14 @@ Resources:
   ApiGatewayRequestQueryStringValidator:
     Type: AWS::ApiGateway::RequestValidator
     Properties:
-      RestApiId: !Ref ApiGateway
+      RestApiId: !ImportValue ApiGateway
       Name: ValidateQueryString
       ValidateRequestParameters: true
       ValidateRequestBody: false 
   ApiGatewayRequestBodyValidator:
     Type: AWS::ApiGateway::RequestValidator
     Properties:
-      RestApiId: !Ref ApiGateway
+      RestApiId: !ImportValue ApiGateway
       Name: ValidateRequestBody
       ValidateRequestParameters: false
       ValidateRequestBody: true
