@@ -17,7 +17,7 @@ echo $BRANCH_NAME
 if [ -d "$API_GATEWAYS_DIR" ]; then
   echo "Deploying API Gateway stacks..."
   if [ -f "$API_GATEWAYS_DIR/main_template.yml" ]; then
-    STACK_NAME="${STACK_NAME_PREFIX}-api-gateway"
+    STACK_NAME="${STACK_NAME_PREFIX}-api-gateway-common-stack"
     TEMPLATE_FILE="$API_GATEWAYS_DIR/main_template.yml"
     aws cloudformation deploy \
       --template-file "$TEMPLATE_FILE" \

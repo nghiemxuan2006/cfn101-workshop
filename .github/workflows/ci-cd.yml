@@ -78,6 +78,15 @@ jobs:
               --stack-name nx-vid-infrastructure-${{ env.BRANCH_NAME }}-stack \
               --parameter-overrides EnvironmentType="${{ env.BRANCH_NAME }}" \
               --capabilities CAPABILITY_IAM
+        
+        - name: Deploy api gateway
+          run: |
+            echo "Deploying API Gateway stack..."
+            aws cloudformation deploy \
+              --template-file templates/infrastructure/api-gateway.yml \
+              --stack-name nx-vid-api-gateway-stack \
+              --parameter-overrides EnvironmentType="${{ env.BRANCH_NAME }}" \
+              --capabilities CAPABILITY_IAM
         - name: Deploy Layers
           run: |
             chmod +x ./templates/bash_scripts/deploy_layers.sh
