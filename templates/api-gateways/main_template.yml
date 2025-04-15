@@ -18,6 +18,7 @@ Parameters:
 Resources:
   ApiGateway:
     Type: AWS::ApiGateway::RestApi
+    DeletionPolicy: Retain
     Properties:
       Name: !Sub ${InfrastructureName}-api
       Description: API Gateway for Lambda function
@@ -25,6 +26,7 @@ Resources:
   # should be in global template for api gateway
   ApiGatewayRequestQueryStringValidator:
     Type: AWS::ApiGateway::RequestValidator
+    DeletionPolicy: Retain
     Properties:
       RestApiId: !Ref ApiGateway
       Name: ValidateQueryString
@@ -32,6 +34,7 @@ Resources:
       ValidateRequestBody: false 
   ApiGatewayRequestBodyValidator:
     Type: AWS::ApiGateway::RequestValidator
+    DeletionPolicy: Retain
     Properties:
       RestApiId: !Ref ApiGateway
       Name: ValidateRequestBody
