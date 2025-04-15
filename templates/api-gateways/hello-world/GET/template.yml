@@ -58,7 +58,7 @@ Resources:
           ENV_TYPE: !Ref EnvironmentType
       Layers:
         - !ImportValue numpy-layer
-  LambdaVersion|COMMIT_HASH|:
+  LambdaVersion:
     Type: AWS::Lambda::Version
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
@@ -71,7 +71,7 @@ Resources:
     UpdateReplacePolicy: Retain
     Properties:
       FunctionName: !Ref LambdaFunction
-      FunctionVersion: !GetAtt LambdaVersion|COMMIT_HASH|.Version
+      FunctionVersion: !GetAtt LambdaVersion.Version
       Description: !Ref CommitMessage
       Name: !Ref EnvironmentType
 

@@ -64,7 +64,7 @@ Resources:
       Layers:
         - !ImportValue pandas-layer
 
-  LambdaVersion|COMMIT_HASH|:
+  LambdaVersion:
     Type: AWS::Lambda::Version
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
@@ -77,7 +77,7 @@ Resources:
     UpdateReplacePolicy: Retain
     Properties:
       FunctionName: !Ref LambdaFunction
-      FunctionVersion: !GetAtt LambdaVersion|COMMIT_HASH|.Version
+      FunctionVersion: !GetAtt LambdaVersion.Version
       Name: !Ref EnvironmentType
       Description: !Ref CommitMessage
   LambdaInvokePermission:
