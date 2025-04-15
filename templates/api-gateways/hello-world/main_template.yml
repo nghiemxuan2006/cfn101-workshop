@@ -70,13 +70,13 @@ Resources:
         ApiGatewayRequestValidator: !ImportValue
           Fn::Sub: ApiGatewayRequestQueryStringValidator # Corrected syntax
 
-  ApiGatewayDeployment:
-    Type: AWS::ApiGateway::Deployment
-    DependsOn: 
-      - GetHelloWorldStack
-      - GetTypeParameterStack
-    Properties:
-      RestApiId: !ImportValue
-        Fn::Sub: RestApiId             # Corrected syntax
-      StageName: !Ref EnvironmentType
-      Description: !Ref CommitMessage
+  # ApiGatewayDeployment:
+  #   Type: AWS::ApiGateway::Deployment
+  #   DependsOn: 
+  #     - GetHelloWorldStack
+  #     - GetTypeParameterStack
+  #   Properties:
+  #     RestApiId: !ImportValue
+  #       Fn::Sub: RestApiId             # Corrected syntax
+  #     StageName: !Ref EnvironmentType
+  #     Description: !Ref CommitMessage
