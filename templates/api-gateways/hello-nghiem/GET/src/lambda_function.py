@@ -6,6 +6,7 @@ def handler(event, context):
     name = event["name"]
     person = {
         "name": name,
+        "nghiem": "hello",
     }
     if "age" in event:
         person["age"] = event["age"]
