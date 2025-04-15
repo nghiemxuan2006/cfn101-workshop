@@ -16,75 +16,30 @@ Parameters:
     ConstraintDescription: Specify either dev, test or prod.
 
 Resources:
-  ApiGateway:
-    Type: AWS::ApiGateway::RestApi
+  # Adding an SQS Queue
+  ProcessingQueue:
+    Type: AWS::SQS::Queue
     Properties:
-      Name: !Sub ${InfrastructureName}-api-${EnvironmentType}
-      Description: API Gateway for Lambda function
-  
-  # should be in infrastructure template    
-  ApiGatewayRequestQueryStringValidator:
-    Type: AWS::ApiGateway::RequestValidator
-    Properties:
-      RestApiId: !Ref ApiGateway
-      Name: ValidateQueryString
-      ValidateRequestParameters: true
-      ValidateRequestBody: false 
-  ApiGatewayRequestBodyValidator:
-    Type: AWS::ApiGateway::RequestValidator
-    Properties:
-      RestApiId: !Ref ApiGateway
-      Name: ValidateRequestBody
-      ValidateRequestParameters: false
-      ValidateRequestBody: true
-  
-
-  LambdaExecutionRole:
-    Type: AWS::IAM::Role
-    Properties: 
-      AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement: 
-          - Effect: "Allow"
-            Principal: 
-              Service: 
-                - "lambda.amazonaws.com"
-            Action: 
-              - "sts:AssumeRole"
-      Policies: 
-        - PolicyName: "LambdaExecutionPolicy"
-          PolicyDocument: 
-            Version: "2012-10-17"
-            Statement: 
-              - Effect: "Allow"
-                Action: 
-                  - "logs:CreateLogGroup"
-                  - "logs:CreateLogStream"
-                  - "logs:PutLogEvents"
-                Resource: "*"
-                
+      QueueName: !Sub ${InfrastructureName}-queue-${EnvironmentType}
+      VisibilityTimeout: 300
+      MessageRetentionPeriod: 345600 # 4 days
+      DelaySeconds: 0
+      # Optional: Configure dead-letter queue if needed
+      # RedrivePolicy:
+      #   deadLetterTargetArn: !GetAtt DeadLetterQueue.Arn
+      #   maxReceiveCount: 5
+      Tags:
+        - Key: Name
+          Value: !Sub ${InfrastructureName}-queue-${EnvironmentType}
+        - Key: Environment
+          Value: !Ref EnvironmentType
+           
 Outputs:
-  ApiGatewayRequestQueryStringValidator:
-    Value: !Ref ApiGatewayRequestQueryStringValidator
-    Export:
-      Name: !Sub ApiGatewayRequestQueryStringValidator-${EnvironmentType}
-  ApiGatewayRequestBodyValidator:
-    Value: !Ref ApiGatewayRequestBodyValidator
-    Export:
-      Name: !Sub ApiGatewayRequestBodyValidator-${EnvironmentType}
-  RestApiId:
-    Value: !Ref ApiGateway
-    Export:
-      Name: !Sub RestApiId-${EnvironmentType}
-  RestApiRootResourceId:
-    Value: !GetAtt ApiGateway.RootResourceId
-    Export:
-      Name: !Sub RestApiRootResourceId-${EnvironmentType}
-  LambdaExecutionRole:
-    Value: !GetAtt LambdaExecutionRole.Arn
-    Export:
-      Name: !Sub LambdaExecutionRole-${EnvironmentType}
   InfrastructureName:
     Value: !Ref InfrastructureName
     Export:
       Name: !Sub InfrastructureName-${EnvironmentType}
+  ProcessingQueue:
+    Value: !Ref ProcessingQueue
+    Export:
+      Name: !Sub ProcessingQueue-${EnvironmentType}

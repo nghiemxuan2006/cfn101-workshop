@@ -1,0 +1,57 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: VID Api Gateway
+Parameters:
+  InfrastructureName:
+    Type: String
+    Default: nx-vid
+  EnvironmentType:
+    Description: Specify the Environment type of the stack.
+    Type: String
+    Default: test
+    AllowedValues:
+      - dev
+      - test
+      - prod
+    ConstraintDescription: Specify either dev, test or prod.
+
+Resources:
+  ApiGateway:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: !Sub ${InfrastructureName}-api
+      Description: API Gateway for Lambda function
+  
+  # should be in global template for api gateway
+  ApiGatewayRequestQueryStringValidator:
+    Type: AWS::ApiGateway::RequestValidator
+    Properties:
+      RestApiId: !Ref ApiGateway
+      Name: ValidateQueryString
+      ValidateRequestParameters: true
+      ValidateRequestBody: false 
+  ApiGatewayRequestBodyValidator:
+    Type: AWS::ApiGateway::RequestValidator
+    Properties:
+      RestApiId: !Ref ApiGateway
+      Name: ValidateRequestBody
+      ValidateRequestParameters: false
+      ValidateRequestBody: true
+
+Outputs:
+  ApiGatewayRequestQueryStringValidator:
+    Value: !Ref ApiGatewayRequestQueryStringValidator
+    Export:
+      Name: ApiGatewayRequestQueryStringValidator
+  ApiGatewayRequestBodyValidator:
+    Value: !Ref ApiGatewayRequestBodyValidator
+    Export:
+      Name: ApiGatewayRequestBodyValidator
+  RestApiId:
+    Value: !Ref ApiGateway
+    Export:
+      Name: RestApiId
+  RestApiRootResourceId:
+    Value: !GetAtt ApiGateway.RootResourceId
+    Export:
+      Name: RestApiRootResourceId

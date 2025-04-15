@@ -62,6 +62,14 @@ jobs:
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             aws-region: ${{ secrets.MY_AWS_REGION }}
 
+        - name: Deploy Roles stack
+          run: |
+            echo "Deploying roles stack..."
+            aws cloudformation deploy \
+              --template-file templates/infrastructure/role.yml \
+              --stack-name nx-vid-roles-stack \
+              --capabilities CAPABILITY_IAM
+
         - name: Deploy Infrastructure Stack
           run: |
             echo "Deploying main infrastructure stack..."

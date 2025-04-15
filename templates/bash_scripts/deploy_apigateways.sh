@@ -16,6 +16,18 @@ echo $BRANCH_NAME
 # Deploy API Gateway stacks
 if [ -d "$API_GATEWAYS_DIR" ]; then
   echo "Deploying API Gateway stacks..."
+  if [ -f "$API_GATEWAYS_DIR/main_template.yml" ]; then
+    STACK_NAME="${STACK_NAME_PREFIX}-api-gateway"
+    TEMPLATE_FILE="$API_GATEWAYS_DIR/main_template.yml"
+    aws cloudformation deploy \
+      --template-file "$TEMPLATE_FILE" \
+      --stack-name "$STACK_NAME" \
+      --parameter-overrides EnvironmentType="$BRANCH_NAME"\
+      --capabilities CAPABILITY_IAM
+  else
+    echo "No commit message file found in $API_GATEWAYS_DIR"
+    exit 1
+  fi
   for endpoint_dir in "$API_GATEWAYS_DIR"/*; do
     if [ -d "$endpoint_dir" ]; then
       ENDPOINT_NAME=$(basename "$endpoint_dir" | tr '[:upper:]' '[:lower:]')
