@@ -67,12 +67,14 @@ Resources:
   LambdaVersion|COMMIT_HASH|:
     Type: AWS::Lambda::Version
     DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       FunctionName: !Ref LambdaFunction
       Description: !Ref CommitMessage
   LambdaAlias:
     Type: AWS::Lambda::Alias
     DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       FunctionName: !Ref LambdaFunction
       FunctionVersion: !GetAtt LambdaVersion|COMMIT_HASH|.Version
