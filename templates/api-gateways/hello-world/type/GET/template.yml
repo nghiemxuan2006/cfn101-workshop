@@ -75,6 +75,7 @@ Resources:
   LambdaInvokePermission:
     Type: AWS::Lambda::Permission
     DependsOn: LambdaAlias
+    DeletionPolicy: Retain
     Properties:
       FunctionName: !Sub ${LambdaFunction.Arn}:${EnvironmentType}
       Action: lambda:InvokeFunction
