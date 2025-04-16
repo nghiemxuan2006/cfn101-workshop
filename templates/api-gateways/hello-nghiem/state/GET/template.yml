@@ -84,7 +84,7 @@ Resources:
     Type: AWS::Lambda::Permission
     DependsOn: LambdaAlias
     Properties:
-      FunctionName: !Sub ${LambdaFunction.Arn}:${EnvironmentType}
+      FunctionName: !Ref LambdaAlias
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
       SourceArn: 
@@ -108,7 +108,10 @@ Resources:
       Integration:
         Type: AWS
         IntegrationHttpMethod: POST
-        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}:${EnvironmentType}/invocations
+        Uri: !Join
+          - ""
+          - - !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}
+            - ":${stageVariables.env}/invocations"
         RequestTemplates:
           # if have "", JSON parser will treat it as a string value, otherwise, it will be treated as a number
           application/json: |
