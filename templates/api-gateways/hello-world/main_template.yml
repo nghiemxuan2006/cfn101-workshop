@@ -79,4 +79,4 @@ Resources:
   #     RestApiId: !ImportValue
   #       Fn::Sub: RestApiId             # Corrected syntax
   #     StageName: !Ref EnvironmentType
-  #     Description: !Ref CommitMessage
+  #     Description: !Ref CommitMessage 
