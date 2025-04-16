@@ -105,7 +105,10 @@ Resources:
       Integration:
         Type: AWS
         IntegrationHttpMethod: POST
-        Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}:$${stageVariables.env}/invocations
+        Uri: !Join
+          - ""
+          - - !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}
+            - ":${stageVariables.env}/invocations"
         IntegrationResponses:
           - StatusCode: 200
             ResponseTemplates:
