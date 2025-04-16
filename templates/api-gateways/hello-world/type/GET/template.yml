@@ -113,4 +113,4 @@ Resources:
       MethodResponses:
       - StatusCode: 200
         ResponseModels:
-          application/json: Empty 
+          application/json: Empty
