@@ -79,7 +79,7 @@ Resources:
     Type: AWS::Lambda::Permission
     DependsOn: LambdaAlias
     Properties:
-      FunctionName:  !Sub ${LambdaFunction.Arn}:${!stageVariables.env}
+      FunctionName:  !Ref LambdaAlias
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
       SourceArn: 
