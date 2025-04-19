@@ -97,19 +97,38 @@ Resources:
       Name: !Ref EnvironmentType # dev
       Description: !Ref CommitMessage
 
-  LambdaInvokePermission:
+  LambdaInvokePermissionTest:
     Type: AWS::Lambda::Permission
+    Condition: IsTest
     UpdateReplacePolicy: Retain
     DeletionPolicy: Retain
+    DependsOn: LambdaAliasTest
     Properties:
-      FunctionName: !Sub ${LambdaFunction.Arn}:${EnvironmentType}
+      FunctionName: !Ref LambdaAliasTest
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
       SourceArn: 
         Fn::Sub: 
           - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApiId}/*/${MethodAPIUpper}/${EndPoint}
           - RestApiId: !ImportValue RestApiId
-            MethodAPIUpper: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]      
+            MethodAPIUpper: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]
+  
+  LambdaInvokePermissionDev:
+    Type: AWS::Lambda::Permission
+    Condition: IsDev
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    DependsOn:
+      - LambdaAliasDev
+    Properties:
+      FunctionName: !Ref LambdaAliasDev
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: 
+        Fn::Sub: 
+          - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApiId}/*/${MethodAPIUpper}/${EndPoint}
+          - RestApiId: !ImportValue RestApiId
+            MethodAPIUpper: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]  
 
   ApiGatewayMethod:
     Type: AWS::ApiGateway::Method
