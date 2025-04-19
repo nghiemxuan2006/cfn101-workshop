@@ -94,14 +94,16 @@ Resources:
     Properties:
       FunctionName: !Ref LambdaFunction
       FunctionVersion: !GetAtt LambdaVersion.Version
-      Name: !Ref EnvironmentType # dev
+      Name: !Ref EnvironmentType # dev 
       Description: !Ref CommitMessage
-      
+
   LambdaInvokePermission:
     Type: AWS::Lambda::Permission
     UpdateReplacePolicy: Retain
     DeletionPolicy: Retain
-    DependsOn: LambdaAlias
+    DependsOn: 
+      - LambdaAliasTest
+      - LambdaAliasDev
     Properties:
       FunctionName: !Sub ${LambdaFunction.Arn}:${EnvironmentType}
       Action: lambda:InvokeFunction

@@ -1,0 +1,41 @@
+name: Deploy-Layer
+
+on:
+  push:
+    paths:
+      - templates/layers/**/*
+      - templates/bash_scripts/prepare_layers.sh
+      - templates/bash_scripts/deploy_layers.sh
+    branches:
+      - dev
+      - test
+env:
+  COMMIT_HASH: ${{ github.sha }}
+  BRANCH_NAME: ${{ github.ref_name }}
+  COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+
+jobs:
+  deploy-layer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.MY_AWS_REGION }}
+      - name: Package and upload Lambda layers
+        run: |
+          chmod +x ./templates/bash_scripts/prepare_layers.sh
+          ./templates/bash_scripts/prepare_layers.sh
+      - name: Deploy Layers
+        run: |
+          chmod +x ./templates/bash_scripts/deploy_layers.sh
+          ./templates/bash_scripts/deploy_layers.sh
