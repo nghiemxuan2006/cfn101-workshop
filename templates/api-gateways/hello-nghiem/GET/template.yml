@@ -40,6 +40,10 @@ Mappings:
     delete:
       Method: DELETE
 
+Conditions:
+  IsTest: !Equals [!Ref EnvironmentType, test]
+  IsDev: !Equals [!Ref EnvironmentType, dev]
+
 Resources:
   # ApiGatewayResource:
   #   Type: AWS::ApiGateway::Resource
@@ -70,19 +74,36 @@ Resources:
     Properties:
       FunctionName: !Ref LambdaFunction
       Description: !Ref CommitMessage
-  LambdaAlias:
+
+  LambdaAliasTest:
     Type: AWS::Lambda::Alias
+    Condition: IsTest
+    # DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
     Properties:
       FunctionName: !Ref LambdaFunction
       FunctionVersion: !GetAtt LambdaVersion.Version
-      Name: !Ref EnvironmentType
+      Name: !Ref EnvironmentType # test
       Description: !Ref CommitMessage
+
+  LambdaAliasDev:
+    Type: AWS::Lambda::Alias
+    Condition: IsDev
+    # DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      FunctionName: !Ref LambdaFunction
+      FunctionVersion: !GetAtt LambdaVersion.Version
+      Name: !Ref EnvironmentType # dev
+      Description: !Ref CommitMessage
+      
   LambdaInvokePermission:
     Type: AWS::Lambda::Permission
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
     DependsOn: LambdaAlias
     Properties:
-      FunctionName: !Ref LambdaAlias
+      FunctionName: !Sub ${LambdaFunction.Arn}:${EnvironmentType}
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
       SourceArn: 
