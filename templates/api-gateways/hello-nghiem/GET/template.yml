@@ -101,9 +101,6 @@ Resources:
     Type: AWS::Lambda::Permission
     UpdateReplacePolicy: Retain
     DeletionPolicy: Retain
-    DependsOn: 
-      - LambdaAliasTest
-      - LambdaAliasDev
     Properties:
       FunctionName: !Sub ${LambdaFunction.Arn}:${EnvironmentType}
       Action: lambda:InvokeFunction
