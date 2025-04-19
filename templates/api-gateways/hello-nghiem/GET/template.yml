@@ -94,7 +94,7 @@ Resources:
     Properties:
       FunctionName: !Ref LambdaFunction
       FunctionVersion: !GetAtt LambdaVersion.Version
-      Name: !Ref EnvironmentType # dev 
+      Name: !Ref EnvironmentType # dev
       Description: !Ref CommitMessage
 
   LambdaInvokePermission:
