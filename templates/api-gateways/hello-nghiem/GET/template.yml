@@ -24,10 +24,6 @@ Parameters:
       - test
       - prod
     ConstraintDescription: Specify either dev, test or prod.
-  ApiGatewayResourceId:
-    Type: String
-  ApiGatewayRequestValidator:
-    Type: String
 
 Mappings:
   UpperCaseMethodAPI:
@@ -40,18 +36,7 @@ Mappings:
     delete:
       Method: DELETE
 
-Conditions:
-  IsTest: !Equals [!Ref EnvironmentType, test]
-  IsDev: !Equals [!Ref EnvironmentType, dev]
-
 Resources:
-  # ApiGatewayResource:
-  #   Type: AWS::ApiGateway::Resource
-  #   Properties:
-  #     ParentId: !ImportValue RestApiRootResourceId
-  #     RestApiId: !ImportValue RestApiId
-  #     PathPart: !Ref EndPoint
-
   LambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
@@ -68,77 +53,15 @@ Resources:
       Layers:
         - !ImportValue pandas-layer
 
-  LambdaVersion:
-    Type: AWS::Lambda::Version
-    UpdateReplacePolicy: Retain
-    Properties:
-      FunctionName: !Ref LambdaFunction
-      Description: !Ref CommitMessage
-
-  LambdaAliasTest:
-    Type: AWS::Lambda::Alias
-    Condition: IsTest
-    # DeletionPolicy: Retain
-    UpdateReplacePolicy: Retain
-    Properties:
-      FunctionName: !Ref LambdaFunction
-      FunctionVersion: !GetAtt LambdaVersion.Version
-      Name: !Ref EnvironmentType # test
-      Description: !Ref CommitMessage
-
-  LambdaAliasDev:
-    Type: AWS::Lambda::Alias
-    Condition: IsDev
-    # DeletionPolicy: Retain
-    UpdateReplacePolicy: Retain
-    Properties:
-      FunctionName: !Ref LambdaFunction
-      FunctionVersion: !GetAtt LambdaVersion.Version
-      Name: !Ref EnvironmentType # dev
-      Description: !Ref CommitMessage
-
-  LambdaInvokePermissionTest:
-    Type: AWS::Lambda::Permission
-    Condition: IsTest
-    UpdateReplacePolicy: Retain
-    DeletionPolicy: Retain
-    DependsOn: LambdaAliasTest
-    Properties:
-      FunctionName: !Ref LambdaAliasTest
-      Action: lambda:InvokeFunction
-      Principal: apigateway.amazonaws.com
-      SourceArn: 
-        Fn::Sub: 
-          - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApiId}/*/${MethodAPIUpper}/${EndPoint}
-          - RestApiId: !ImportValue RestApiId
-            MethodAPIUpper: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]
-  
-  LambdaInvokePermissionDev:
-    Type: AWS::Lambda::Permission
-    Condition: IsDev
-    UpdateReplacePolicy: Retain
-    DeletionPolicy: Retain
-    DependsOn:
-      - LambdaAliasDev
-    Properties:
-      FunctionName: !Ref LambdaAliasDev
-      Action: lambda:InvokeFunction
-      Principal: apigateway.amazonaws.com
-      SourceArn: 
-        Fn::Sub: 
-          - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApiId}/*/${MethodAPIUpper}/${EndPoint}
-          - RestApiId: !ImportValue RestApiId
-            MethodAPIUpper: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]  
-
   ApiGatewayMethod:
     Type: AWS::ApiGateway::Method
     DependsOn: LambdaFunction
     Properties:
       HttpMethod: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]
-      ResourceId: !Ref ApiGatewayResourceId
+      ResourceId: !ImportValue ApiGatewayResourceId
       RestApiId: !ImportValue RestApiId
       AuthorizationType: NONE
-      RequestValidatorId: !Ref ApiGatewayRequestValidator
+      RequestValidatorId: !ImportValue ApiGatewayRequestValidator
       RequestParameters:
         method.request.querystring.name: true
         method.request.querystring.age: false

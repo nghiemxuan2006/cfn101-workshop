@@ -1,0 +1,66 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: Lambda function integrated with the layer.
+
+Parameters:
+  CommitMessage:
+    Type: String
+  LambdaFunctionFileName:
+    Type: String
+  EndPoint:
+    Type: String
+  MethodAPI:
+    Type: String
+    Default: get
+  InfrastructureName:
+    Type: String
+    Default: nx-vid
+  EnvironmentType:
+    Description: Specify the Environment type of the stack.
+    Type: String
+    Default: test
+    AllowedValues:
+      - dev
+      - test
+      - prod
+    ConstraintDescription: Specify either dev, test or prod.
+
+Mappings:
+  UpperCaseMethodAPI:
+    get:
+      Method: GET
+    post:
+      Method: POST
+    put:
+      Method: PUT
+    delete:
+      Method: DELETE
+      
+Resources:
+  LambdaVersion:
+    Type: AWS::Lambda::Version
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      FunctionName: !Sub ${InfrastructureName}-${MethodAPI}-${LambdaFunctionFileName}
+      Description: !Ref CommitMessage
+  LambdaAlias:
+    Type: AWS::Lambda::Alias
+    Properties:
+      FunctionName: !Sub ${InfrastructureName}-${MethodAPI}-${LambdaFunctionFileName}
+      FunctionVersion: !GetAtt LambdaVersion.Version
+      Name: !Ref EnvironmentType
+      Description: !Ref CommitMessage
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    DependsOn: LambdaAlias
+    Properties:
+      FunctionName: !Ref LambdaAlias
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: 
+        Fn::Sub: 
+          - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApiId}/*/${MethodAPIUpper}/${EndPoint}
+          - RestApiId: !ImportValue 
+              Fn::Sub: RestApiId
+            MethodAPIUpper: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]  

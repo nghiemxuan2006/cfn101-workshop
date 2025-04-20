@@ -24,10 +24,6 @@ Parameters:
       - test
       - prod
     ConstraintDescription: Specify either dev, test or prod.
-  ApiGatewayResourceId:
-    Type: String
-  ApiGatewayRequestValidator:
-    Type: String
 
 Mappings:
   UpperCaseMethodAPI:
@@ -41,12 +37,6 @@ Mappings:
       Method: DELETE
 
 Resources:
-  # ApiGatewayResource:
-  #   Type: AWS::ApiGateway::Resource
-  #   Properties:
-  #     ParentId: !ImportValue RestApiRootResourceId
-  #     RestApiId: !ImportValue RestApiId
-  #     PathPart: !Ref EndPoint
 
   LambdaFunction:
     Type: AWS::Lambda::Function
@@ -63,33 +53,6 @@ Resources:
           ENV_TYPE: !Ref EnvironmentType
       Layers:
         - !ImportValue pandas-layer
-
-  LambdaVersion:
-    Type: AWS::Lambda::Version
-    UpdateReplacePolicy: Retain
-    Properties:
-      FunctionName: !Ref LambdaFunction
-      Description: !Ref CommitMessage
-  LambdaAlias:
-    Type: AWS::Lambda::Alias
-    UpdateReplacePolicy: Retain
-    Properties:
-      FunctionName: !Ref LambdaFunction
-      FunctionVersion: !GetAtt LambdaVersion.Version
-      Name: !Ref EnvironmentType
-      Description: !Ref CommitMessage
-  LambdaInvokePermission:
-    Type: AWS::Lambda::Permission
-    DependsOn: LambdaAlias
-    Properties:
-      FunctionName: !Ref LambdaAlias
-      Action: lambda:InvokeFunction
-      Principal: apigateway.amazonaws.com
-      SourceArn: 
-        Fn::Sub: 
-          - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApiId}/*/${MethodAPIUpper}/${EndPoint}
-          - RestApiId: !ImportValue RestApiId
-            MethodAPIUpper: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]
             
   ApiGatewayResponseModel:
     Type: AWS::ApiGateway::Model
@@ -116,10 +79,10 @@ Resources:
     DependsOn: LambdaFunction
     Properties:
       HttpMethod: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]
-      ResourceId: !Ref ApiGatewayResourceId
+      ResourceId: !ImportValue ApiGatewayResourceId
       RestApiId: !ImportValue RestApiId
       AuthorizationType: NONE
-      RequestValidatorId: !Ref ApiGatewayRequestValidator
+      RequestValidatorId: !ImportValue ApiGatewayRequestValidator
       RequestModels:
         application/json: !Ref ApiGatewayResponseModel
       Integration:
