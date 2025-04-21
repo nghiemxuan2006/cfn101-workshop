@@ -16,13 +16,38 @@ Parameters:
     ConstraintDescription: Specify either dev, test or prod.
 
 Resources:
+  # should be in global template for api gateway
   ApiGateway:
     Type: AWS::ApiGateway::RestApi
     DeletionPolicy: Retain
     Properties:
       Name: !Sub ${InfrastructureName}-api
       Description: API Gateway for Lambda function
+
+  ApiGatewayRequestQueryStringValidator:
+    Type: AWS::ApiGateway::RequestValidator
+    Properties:
+      RestApiId: !Ref ApiGateway
+      Name: ValidateQueryString
+      ValidateRequestParameters: true
+      ValidateRequestBody: false 
+  ApiGatewayRequestBodyValidator:
+    Type: AWS::ApiGateway::RequestValidator
+    Properties:
+      RestApiId: !Ref ApiGateway
+      Name: ValidateRequestBody
+      ValidateRequestParameters: false
+      ValidateRequestBody: true
+
 Outputs:
+  ApiGatewayRequestQueryStringValidator:
+    Value: !Ref ApiGatewayRequestQueryStringValidator
+    Export:
+      Name: ApiGatewayRequestQueryStringValidator
+  ApiGatewayRequestBodyValidator:
+    Value: !Ref ApiGatewayRequestBodyValidator
+    Export:
+      Name: ApiGatewayRequestBodyValidator
   RestApiId:
     Value: !Ref ApiGateway
     Export:

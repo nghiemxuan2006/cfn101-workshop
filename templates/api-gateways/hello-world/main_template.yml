@@ -38,45 +38,12 @@ Resources:
         Fn::Sub: RestApiId             # Corrected syntax
       PathPart: "{type}"
 
-  GetHelloWorldStack:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/${EndPoint}/GET/template.yml
-      TimeoutInMinutes: 20
-      Parameters:
-        CommitMessage: !Ref CommitMessage
-        EndPoint: !Ref EndPoint
-        LambdaFunctionFileName: !Ref EndPoint
-        InfrastructureName: !Ref InfrastructureName
-        EnvironmentType: !Ref EnvironmentType
-        MethodAPI: get
-        ApiGatewayResourceId: !Ref ApiGatewayResource
-        ApiGatewayRequestValidator: !ImportValue
-          Fn::Sub: ApiGatewayRequestQueryStringValidator # Corrected syntax
-
-  GetTypeParameterStack:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/${EndPoint}/type/GET/template.yml
-      TimeoutInMinutes: 20
-      Parameters:
-        CommitMessage: !Ref CommitMessage
-        EndPoint: !Sub ${EndPoint}/{type}
-        LambdaFunctionFileName: !Sub ${EndPoint}-type
-        InfrastructureName: !Ref InfrastructureName
-        EnvironmentType: !Ref EnvironmentType
-        MethodAPI: get
-        ApiGatewayResourceId: !Ref ApiGatewayTypeResource
-        ApiGatewayRequestValidator: !ImportValue
-          Fn::Sub: ApiGatewayRequestQueryStringValidator # Corrected syntax
-
-  # ApiGatewayDeployment:
-  #   Type: AWS::ApiGateway::Deployment
-  #   DependsOn: 
-  #     - GetHelloWorldStack
-  #     - GetTypeParameterStack
-  #   Properties:
-  #     RestApiId: !ImportValue
-  #       Fn::Sub: RestApiId             # Corrected syntax
-  #     StageName: !Ref EnvironmentType
-  #     Description: !Ref CommitMessage 
+Outputs:
+  ApiGatewayResource:
+    Value: !Ref ApiGatewayResource
+    Export:
+      Name: ApiGatewayHelloWorldResource
+  ApiGatewayTypeResource:
+    Value: !Ref ApiGatewayTypeResource
+    Export:
+      Name: ApiGatewayHelloWorldTypeResource

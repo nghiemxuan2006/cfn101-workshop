@@ -22,8 +22,6 @@ Parameters:
       - test
       - prod
     ConstraintDescription: Specify either dev, test or prod.
-  ApiGatewayResourceId:
-    Type: String
   ApiGatewayRequestValidator:
     Type: String
 
@@ -62,7 +60,7 @@ Resources:
     DependsOn: LambdaFunction
     Properties:
       HttpMethod: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]
-      ResourceId: !ImportValue ApiGatewayResourceId
+      ResourceId: !ImportValue ApiGatewayHelloWorldResource
       RestApiId: !ImportValue
         Fn::Sub: RestApiId
       AuthorizationType: NONE

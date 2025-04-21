@@ -34,55 +34,12 @@ Resources:
       RestApiId: !ImportValue RestApiId
       PathPart: state
   
-  GetHelloNghiemStack:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/${EndPoint}/GET/template.yml
-      TimeoutInMinutes: 20
-      Parameters:
-        CommitMessage: !Ref CommitMessage
-        EndPoint: !Ref EndPoint
-        LambdaFunctionFileName: !Ref EndPoint
-        InfrastructureName: !Ref InfrastructureName
-        EnvironmentType: !Ref EnvironmentType
-        MethodAPI: get
-        ApiGatewayResourceId: !Ref ApiGatewayResource
-        ApiGatewayRequestValidator: !ImportValue ApiGatewayRequestQueryStringValidator
-  PostHelloNghiemStack:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/${EndPoint}/POST/template.yml
-      TimeoutInMinutes: 20
-      Parameters:
-        CommitMessage: !Ref CommitMessage
-        EndPoint: !Ref EndPoint
-        LambdaFunctionFileName: !Ref EndPoint
-        InfrastructureName: !Ref InfrastructureName
-        EnvironmentType: !Ref EnvironmentType
-        MethodAPI: post
-        ApiGatewayResourceId: !Ref ApiGatewayResource
-        ApiGatewayRequestValidator: !ImportValue ApiGatewayRequestBodyValidator
-  GetHelloNghiemStateStack:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: !Sub https://${S3BucketName}.s3.amazonaws.com/${InfrastructureName}/templates/api-gateways/${EndPoint}/state/GET/template.yml
-      TimeoutInMinutes: 20
-      Parameters:
-        CommitMessage: !Ref CommitMessage
-        EndPoint: !Sub ${EndPoint}/state
-        LambdaFunctionFileName: !Sub ${EndPoint}-state # this is name of function
-        InfrastructureName: !Ref InfrastructureName
-        EnvironmentType: !Ref EnvironmentType
-        MethodAPI: get
-        ApiGatewayResourceId: !Ref ApiGatewayStateResource # this is endpoint
-        ApiGatewayRequestValidator: !ImportValue ApiGatewayRequestQueryStringValidator
-  
-  # ApiGatewayDeployment:
-  #   Type: AWS::ApiGateway::Deployment
-  #   DependsOn: 
-  #     - GetHelloNghiemStack
-  #     - PostHelloNghiemStack
-  #     - GetHelloNghiemStateStack
-  #   Properties:
-  #     RestApiId: !ImportValue RestApiId
-  #     StageName: !Ref EnvironmentType
+Outputs:
+  ApiGatewayResource:
+    Value: !Ref ApiGatewayResource
+    Export:
+      Name: ApiGatewayHelloNghiemResource
+  ApiGatewayStateResource:
+    Value: !Ref ApiGatewayStateResource
+    Export:
+      Name: ApiGatewayHelloNghiemStateResource

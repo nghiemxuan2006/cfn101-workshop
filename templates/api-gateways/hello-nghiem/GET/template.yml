@@ -56,7 +56,7 @@ Resources:
     DependsOn: LambdaFunction
     Properties:
       HttpMethod: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]
-      ResourceId: !ImportValue ApiGatewayResourceId
+      ResourceId: !ImportValue ApiGatewayHelloNghiemResource
       RestApiId: !ImportValue RestApiId
       AuthorizationType: NONE
       RequestValidatorId: !ImportValue ApiGatewayRequestValidator
