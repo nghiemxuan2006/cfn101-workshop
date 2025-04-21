@@ -58,45 +58,17 @@ Resources:
           ENV_TYPE: !Ref EnvironmentType
       Layers:
         - !ImportValue numpy-layer
-  LambdaVersion:
-    Type: AWS::Lambda::Version
-    UpdateReplacePolicy: Retain
-    Properties:
-      FunctionName: !Ref LambdaFunction
-      Description: !Ref CommitMessage
-  LambdaAlias:
-    Type: AWS::Lambda::Alias
-    UpdateReplacePolicy: ReplaceAndRetain 
-    Properties:
-      FunctionName: !Ref LambdaFunction
-      FunctionVersion: !GetAtt LambdaVersion.Version
-      Description: !Ref CommitMessage
-      Name: !Ref EnvironmentType
-
-  LambdaInvokePermission:
-    Type: AWS::Lambda::Permission
-    DependsOn: LambdaAlias
-    Properties:
-      FunctionName:  !Ref LambdaAlias
-      Action: lambda:InvokeFunction
-      Principal: apigateway.amazonaws.com
-      SourceArn: 
-        Fn::Sub: 
-          - arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApiId}/*/${MethodAPIUpper}/${EndPoint}
-          - RestApiId: !ImportValue 
-              Fn::Sub: RestApiId
-            MethodAPIUpper: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]
 
   ApiGatewayMethod:
     Type: AWS::ApiGateway::Method
     DependsOn: LambdaFunction
     Properties:
       HttpMethod: !FindInMap [UpperCaseMethodAPI, !Ref MethodAPI, Method]
-      ResourceId: !Ref ApiGatewayResourceId
+      ResourceId: !ImportValue ApiGatewayResourceId
       RestApiId: !ImportValue
         Fn::Sub: RestApiId
       AuthorizationType: NONE
-      RequestValidatorId: !Ref ApiGatewayRequestValidator
+      RequestValidatorId: !ImportValue ApiGatewayRequestValidator
       RequestParameters:
         method.request.querystring.name: true
         method.request.querystring.age: false
