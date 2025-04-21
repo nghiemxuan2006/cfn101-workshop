@@ -7,8 +7,6 @@ Parameters:
     Type: String
   LambdaFunctionFileName:
     Type: String
-  EndPoint:
-    Type: String
   MethodAPI:
     Type: String
     Default: get

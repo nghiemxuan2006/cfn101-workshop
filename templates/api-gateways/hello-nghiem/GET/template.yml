@@ -7,8 +7,6 @@ Parameters:
     Type: String
   LambdaFunctionFileName:
     Type: String
-  EndPoint:
-    Type: String
   MethodAPI:
     Type: String
     Default: get
@@ -111,8 +109,3 @@ Resources:
   #     StageName: !Ref EnvironmentType
   #     DeploymentId: !Ref ApiGatewayDeployment
   #     RestApiId: !ImportValue RestApiId
-
-# Outputs:
-#   ApiGatewayUrl:
-#     Description: URL of the API Gateway
-#     Value: !Sub https://${RestApiId}.execute-api.${AWS::Region}.amazonaws.com/${EnvironmentType}/${EndPoint} 
