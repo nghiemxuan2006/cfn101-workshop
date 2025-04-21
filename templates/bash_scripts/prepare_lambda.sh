@@ -1,6 +1,13 @@
 FUNCTION_DIR="templates/api-gateways"
 S3_BUCKET="my-bucket-bucket"
 
+remove_all_braces() {
+    local input="$1"
+    local output
+    output=$(echo "$input" | sed 's/{\([^}]*\)}/\1/g')
+    echo "$output"
+}
+
 # Function to recursively process directories
 process_directory() {
   local dir_path="$1"
@@ -14,6 +21,7 @@ process_directory() {
       if [ -d "$item/src" ]; then
         # Combine parent name and current item name for unique function identification
         local function_name="$item_name-$parent_name"
+        function_name=$(remove_all_braces "$function_name")
 
         echo "Packaging function: $function_name"
 

@@ -2,7 +2,7 @@
 
 # filepath: d:\my_study\cfn101-workshop\templates\bash_scripts\deploy_apigateways.sh
 
-set -e
+# set -e
 
 # Define variables
 STACK_NAME_PREFIX="nx-vid"
@@ -13,43 +13,79 @@ echo $COMMIT_HASH
 
 echo $BRANCH_NAME
 
-# Deploy API Gateway stacks
-if [ -d "$API_GATEWAYS_DIR" ]; then
-  echo "Deploying API Gateway stacks..."
-  if [ -f "$API_GATEWAYS_DIR/main_template.yml" ]; then
-    STACK_NAME="${STACK_NAME_PREFIX}-api-gateway-common-stack"
-    TEMPLATE_FILE="$API_GATEWAYS_DIR/main_template.yml"
-    aws cloudformation deploy \
-      --template-file "$TEMPLATE_FILE" \
-      --stack-name "$STACK_NAME" \
-      --parameter-overrides EnvironmentType="$BRANCH_NAME"\
-      --capabilities CAPABILITY_IAM
-  else
-    echo "No commit message file found in $API_GATEWAYS_DIR"
-    exit 1
-  fi
-  for endpoint_dir in "$API_GATEWAYS_DIR"/*; do
-    if [ -d "$endpoint_dir" ]; then
-      ENDPOINT_NAME=$(basename "$endpoint_dir" | tr '[:upper:]' '[:lower:]')
-      echo "Processing endpoint: $ENDPOINT_NAME"
-      TEMPLATE_FILE="$endpoint_dir/main_template.yml"
-      if [ -f "$TEMPLATE_FILE" ]; then
-        sed -i "s/|COMMIT_HASH|/$COMMIT_HASH/g" $TEMPLATE_FILE
-        STACK_NAME="${STACK_NAME_PREFIX}-${ENDPOINT_NAME}"
+# Method 1: Using sed and tr
+convert_to_camel_case() {
+    local kebab_string="$1"
+    # First capitalize each part after splitting by dash
+    local camel_case=$(echo "$kebab_string" | sed -r 's/(^|-)([a-z])/\U\2/g' | tr -d '-')
+    echo "$camel_case"
+}
+
+remove_all_braces() {
+    local input="$1"
+    local output
+    output=$(echo "$input" | sed 's/{\([^}]*\)}/\1/g')
+    echo "$output"
+}
+
+deploy_api_gateways() {
+  local dir_path="$1"
+  local parent_name="$2"
+  local path="$3"
+
+  for item in "$dir_path"/*; do
+    if [ -d "$item" ]; then
+      echo "Processing item: $item"
+      local item_name=$(basename "$item" | tr '[:upper:]' '[:lower:]')
+
+      if [ -f "$item/main_template.yml" ]; then
+        ENDPOINT_NAME="$item_name"
+        TEMPLATE_FILE="$item/main_template.yml"
+        STACK_NAME="${parent_name:+$parent_name-}$ENDPOINT_NAME"
+        STACK_NAME="${STACK_NAME_PREFIX}-$STACK_NAME-stack"
+        echo "Processing endpoint: $STACK_NAME"
+        # aws cloudformation deploy \
+        #   --template-file "$TEMPLATE_FILE" \
+        #   --stack-name "$STACK_NAME" \
+        #   --parameter-overrides EndPoint="$ENDPOINT_NAME" CommitMessage="$COMMIT_MESSAGE" EnvironmentType="$BRANCH_NAME"\
+        #   --capabilities CAPABILITY_IAM
+      fi
+
+      # Check if the directory contains a "src" folder (indicating a Lambda function)
+      if [ -d "$item/src" ]; then
+        # Combine parent name and current item name for unique function identification
+        local function_name="$item_name-$parent_name"
+        echo "Before deploy api gateway of: $function_name"
+        function_name=$(remove_all_braces "$function_name")
+        Method="$item_name"
+
+        echo "After deploy api gateway of: $function_name"
+        echo "Deploying API Gateway for function: $path"
+
+
         aws cloudformation deploy \
-          --template-file "$TEMPLATE_FILE" \
-          --stack-name "$STACK_NAME" \
-          --parameter-overrides EndPoint="$ENDPOINT_NAME" CommitMessage="$COMMIT_MESSAGE" EnvironmentType="$BRANCH_NAME"\
+          --template-file "$item/template.yml" \
+          --stack-name "${STACK_NAME_PREFIX}-$function_name-stack" \
+          --parameter-overrides MethodAPI="$Method" CommitMessage="$COMMIT_MESSAGE" EnvironmentType="$BRANCH_NAME" \
+            LambdaFunctionFileName="$function_name" \
           --capabilities CAPABILITY_IAM
+        
+        # deploy lambda alias, versioning
+        aws cloudformation deploy \
+          --template-file "$item/lambda_function.yml" \
+          --stack-name "${STACK_NAME_PREFIX}-$function_name-alias-stack-$BRANCH_NAME" \
+          --parameter-overrides MethodAPI="$Method" CommitMessage="$COMMIT_MESSAGE" EnvironmentType="$BRANCH_NAME" \
+            LambdaFunctionFileName="$function_name" Endpoint="$path" \
+          --capabilities CAPABILITY_IAM
+          
       else
-        echo "No main_template.yml found in $endpoint_dir"
-        exit 1
+        # Recursively process subdirectories
+        deploy_api_gateways "$item" "${parent_name:+$parent_name-}$item_name" "${parent_name:+$parent_name/}$item_name"
       fi
     fi
   done
-else
-  echo "API Gateways directory not found: $API_GATEWAYS_DIR"
-  exit 1
-fi
+}
 
-echo "All API Gateway stacks deployed successfully."
+deploy_api_gateways "$API_GATEWAYS_DIR"
+
+# echo "All API Gateway stacks deployed successfully."
