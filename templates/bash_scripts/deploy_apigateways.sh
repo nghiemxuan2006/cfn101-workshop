@@ -7,7 +7,8 @@
 # Define variables
 STACK_NAME_PREFIX="nx-vid"
 
-API_GATEWAYS_DIR="templates/api-gateways"
+FOLDER_NAME="$1"
+API_GATEWAYS_DIR="templates/api-gateways/$FOLDER_NAME"
 
 echo $COMMIT_HASH
 
@@ -38,18 +39,18 @@ deploy_api_gateways() {
       echo "Processing item: $item"
       local item_name=$(basename "$item" | tr '[:upper:]' '[:lower:]')
 
-      if [ -f "$item/main_template.yml" ]; then
-        ENDPOINT_NAME="$item_name"
-        TEMPLATE_FILE="$item/main_template.yml"
-        STACK_NAME="${parent_name:+$parent_name-}$ENDPOINT_NAME"
-        STACK_NAME="${STACK_NAME_PREFIX}-$STACK_NAME-stack"
-        echo "Processing endpoint: $STACK_NAME"
-        # aws cloudformation deploy \
-        #   --template-file "$TEMPLATE_FILE" \
-        #   --stack-name "$STACK_NAME" \
-        #   --parameter-overrides EndPoint="$ENDPOINT_NAME" CommitMessage="$COMMIT_MESSAGE" EnvironmentType="$BRANCH_NAME"\
-        #   --capabilities CAPABILITY_IAM
-      fi
+      # if [ -f "$item/main_template.yml" ]; then
+      #   ENDPOINT_NAME="$item_name"
+      #   TEMPLATE_FILE="$item/main_template.yml"
+      #   STACK_NAME="${parent_name:+$parent_name-}$ENDPOINT_NAME"
+      #   STACK_NAME="${STACK_NAME_PREFIX}-$STACK_NAME-stack"
+      #   echo "Processing endpoint: $STACK_NAME"
+      #   aws cloudformation deploy \
+      #     --template-file "$TEMPLATE_FILE" \
+      #     --stack-name "$STACK_NAME" \
+      #     --parameter-overrides EndPoint="$ENDPOINT_NAME" CommitMessage="$COMMIT_MESSAGE" EnvironmentType="$BRANCH_NAME"\
+      #     --capabilities CAPABILITY_IAM
+      # fi
 
       # Check if the directory contains a "src" folder (indicating a Lambda function)
       if [ -d "$item/src" ]; then
@@ -86,6 +87,6 @@ deploy_api_gateways() {
   done
 }
 
-deploy_api_gateways "$API_GATEWAYS_DIR"
+deploy_api_gateways "$API_GATEWAYS_DIR" "$FOLDER_NAME"
 
 # echo "All API Gateway stacks deployed successfully."

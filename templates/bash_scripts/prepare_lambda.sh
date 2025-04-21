@@ -1,4 +1,6 @@
-FUNCTION_DIR="templates/api-gateways"
+FOLDER_NAME="$1"
+
+FUNCTION_DIR="templates/api-gateways/$FOLDER_NAME"
 S3_BUCKET="my-bucket-bucket"
 
 remove_all_braces() {
@@ -42,4 +44,4 @@ process_directory() {
 }
 
 # Start processing from the root FUNCTION_DIR
-process_directory "$FUNCTION_DIR"
+process_directory "$FUNCTION_DIR" "$FOLDER_NAME"
