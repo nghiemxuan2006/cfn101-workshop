@@ -22,8 +22,6 @@ Parameters:
       - test
       - prod
     ConstraintDescription: Specify either dev, test or prod.
-  ApiGatewayRequestValidator:
-    Type: String
 
 Mappings:
   UpperCaseMethodAPI:
@@ -64,7 +62,7 @@ Resources:
       RestApiId: !ImportValue
         Fn::Sub: RestApiId
       AuthorizationType: NONE
-      RequestValidatorId: !ImportValue ApiGatewayRequestValidator
+      RequestValidatorId: !ImportValue ApiGatewayRequestQueryStringValidator
       RequestParameters:
         method.request.querystring.name: true
         method.request.querystring.age: false

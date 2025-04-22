@@ -59,7 +59,7 @@ Resources:
       ResourceId: !ImportValue ApiGatewayHelloNghiemResource
       RestApiId: !ImportValue RestApiId
       AuthorizationType: NONE
-      RequestValidatorId: !ImportValue ApiGatewayRequestValidator
+      RequestValidatorId: !ImportValue ApiGatewayRequestQueryStringValidator
       RequestParameters:
         method.request.querystring.name: true
         method.request.querystring.age: false

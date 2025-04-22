@@ -61,7 +61,7 @@ Resources:
       RestApiId: !ImportValue
         Fn::Sub: RestApiId
       AuthorizationType: NONE
-      RequestValidatorId: !ImportValue ApiGatewayRequestValidator
+      RequestValidatorId: !ImportValue ApiGatewayRequestQueryStringValidator
       RequestParameters:
         method.request.path.type: true
       Integration:

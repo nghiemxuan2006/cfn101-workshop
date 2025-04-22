@@ -80,7 +80,7 @@ Resources:
       ResourceId: !ImportValue ApiGatewayHelloNghiemResource
       RestApiId: !ImportValue RestApiId
       AuthorizationType: NONE
-      RequestValidatorId: !ImportValue ApiGatewayRequestValidator
+      RequestValidatorId: !ImportValue ApiGatewayRequestBodyValidator
       RequestModels:
         application/json: !Ref ApiGatewayResponseModel
       Integration:
