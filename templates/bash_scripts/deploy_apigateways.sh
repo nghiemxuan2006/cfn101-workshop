@@ -39,18 +39,19 @@ deploy_api_gateways() {
       echo "Processing item: $item"
       local item_name=$(basename "$item" | tr '[:upper:]' '[:lower:]')
 
-      # if [ -f "$item/main_template.yml" ]; then
-      #   ENDPOINT_NAME="$item_name"
-      #   TEMPLATE_FILE="$item/main_template.yml"
-      #   STACK_NAME="${parent_name:+$parent_name-}$ENDPOINT_NAME"
-      #   STACK_NAME="${STACK_NAME_PREFIX}-$STACK_NAME-stack"
-      #   echo "Processing endpoint: $STACK_NAME"
-      #   aws cloudformation deploy \
-      #     --template-file "$TEMPLATE_FILE" \
-      #     --stack-name "$STACK_NAME" \
-      #     --parameter-overrides EndPoint="$ENDPOINT_NAME" CommitMessage="$COMMIT_MESSAGE" EnvironmentType="$BRANCH_NAME"\
-      #     --capabilities CAPABILITY_IAM
-      # fi
+      if [ -f "$item/main_template.yml" ]; then
+        ENDPOINT_NAME="$item_name"
+        TEMPLATE_FILE="$item/main_template.yml"
+        STACK_NAME="${parent_name:+$parent_name-}$ENDPOINT_NAME"
+        STACK_NAME="${STACK_NAME_PREFIX}-$STACK_NAME-stack"
+        echo "Processing endpoint: $STACK_NAME"
+        aws cloudformation deploy \
+          --template-file "$TEMPLATE_FILE" \
+          --stack-name "$STACK_NAME" \
+          --parameter-overrides EndPoint="$ENDPOINT_NAME" CommitMessage="$COMMIT_MESSAGE" EnvironmentType="$BRANCH_NAME"\
+          --capabilities CAPABILITY_IAM
+        
+      fi
 
       # Check if the directory contains a "src" folder (indicating a Lambda function)
       if [ -d "$item/src" ]; then
@@ -71,20 +72,14 @@ deploy_api_gateways() {
             LambdaFunctionFileName="$function_name" \
           --capabilities CAPABILITY_IAM
         
-        aws cloudformation wait stack-create-complete \
-          --stack-name "${STACK_NAME_PREFIX}-$function_name-stack"
-        
+
         # deploy lambda alias, versioning
         aws cloudformation deploy \
           --template-file "$item/lambda_function.yml" \
           --stack-name "${STACK_NAME_PREFIX}-$function_name-alias-stack-$BRANCH_NAME" \
           --parameter-overrides MethodAPI="$Method" CommitMessage="$COMMIT_MESSAGE" EnvironmentType="$BRANCH_NAME" \
             LambdaFunctionFileName="$function_name" EndPoint="$path" \
-          --capabilities CAPABILITY_IAM
-        
-        # aws cloudformation wait stack-create-complete \
-        #   --stack-name "${STACK_NAME_PREFIX}-$function_name-alias-stack-$BRANCH_NAME"
-        
+          --capabilities CAPABILITY_IAM   
           
       else
         # Recursively process subdirectories

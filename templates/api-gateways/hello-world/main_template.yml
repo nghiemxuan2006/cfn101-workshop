@@ -46,4 +46,4 @@ Outputs:
   ApiGatewayTypeResource:
     Value: !Ref ApiGatewayTypeResource
     Export:
-      Name: ApiGatewayHelloWorldTypeResource
+      Name: ApiGatewayHelloWorldTypeResource 
