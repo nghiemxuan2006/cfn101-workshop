@@ -71,6 +71,9 @@ deploy_api_gateways() {
             LambdaFunctionFileName="$function_name" \
           --capabilities CAPABILITY_IAM
         
+        aws cloudformation wait stack-create-complete \
+          --stack-name "${STACK_NAME_PREFIX}-$function_name-stack"
+        
         # deploy lambda alias, versioning
         aws cloudformation deploy \
           --template-file "$item/lambda_function.yml" \
@@ -78,6 +81,10 @@ deploy_api_gateways() {
           --parameter-overrides MethodAPI="$Method" CommitMessage="$COMMIT_MESSAGE" EnvironmentType="$BRANCH_NAME" \
             LambdaFunctionFileName="$function_name" EndPoint="$path" \
           --capabilities CAPABILITY_IAM
+        
+        # aws cloudformation wait stack-create-complete \
+        #   --stack-name "${STACK_NAME_PREFIX}-$function_name-alias-stack-$BRANCH_NAME"
+        
           
       else
         # Recursively process subdirectories
