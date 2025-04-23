@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# filepath: d:\my_study\cfn101-workshop\templates\bash_scripts\deploy_apigateways.sh
-
 # set -e
 
 # Define variables
@@ -29,16 +27,14 @@ remove_all_braces() {
     echo "$output"
 }
 
-deploy_api_gateways() {
+deploy_lambda_alias(){
   local dir_path="$1"
   local parent_name="$2"
   local path="$3"
-
   for item in "$dir_path"/*; do
     if [ -d "$item" ]; then
       echo "Processing item: $item"
       local item_name=$(basename "$item" | tr '[:upper:]' '[:lower:]')
-
       # Check if the directory contains a "src" folder (indicating a Lambda function)
       if [ -d "$item/src" ]; then
         # Combine parent name and current item name for unique function identification
@@ -49,22 +45,21 @@ deploy_api_gateways() {
         echo "Path: $path"
         echo "Function name: $function_name"
         echo "Method: $Method"
-
+        
+        # deploy lambda alias, versioning
         aws cloudformation deploy \
-          --template-file "$item/template.yml" \
-          --stack-name "${STACK_NAME_PREFIX}-$function_name-stack" \
+          --template-file "$item/lambda_function.yml" \
+          --stack-name "${STACK_NAME_PREFIX}-$function_name-alias-stack-$BRANCH_NAME" \
           --parameter-overrides MethodAPI="$Method" CommitMessage="$COMMIT_MESSAGE" EnvironmentType="$BRANCH_NAME" \
-            LambdaFunctionFileName="$function_name" \
-          --capabilities CAPABILITY_IAM 
+            LambdaFunctionFileName="$function_name" EndPoint="$path" \
+          --capabilities CAPABILITY_IAM   
           
       else
         # Recursively process subdirectories
-        deploy_api_gateways "$item" "${parent_name:+$parent_name-}$item_name" "${path:+$path/}$item_name"
+        deploy_lambda_alias "$item" "${parent_name:+$parent_name-}$item_name" "${path:+$path/}$item_name"
       fi
     fi
   done
 }
 
-deploy_api_gateways "$API_GATEWAYS_DIR" "$FOLDER_NAME" "$FOLDER_NAME"
-
-# echo "All API Gateway stacks deployed successfully."
+deploy_lambda_alias "$API_GATEWAYS_DIR" "$FOLDER_NAME" "$FOLDER_NAME"

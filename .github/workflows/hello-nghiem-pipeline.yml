@@ -59,8 +59,18 @@ jobs:
             aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             aws-region: ${{ secrets.MY_AWS_REGION }}
+            
+        - name: Deploy Endpoint
+          run: |
+            chmod +x ./templates/bash_scripts/deploy_endpoint.sh
+            ./templates/bash_scripts/deploy_endpoint.sh $FOLDER_NAME
 
         - name: Deploy API Gateway
           run: |
             chmod +x ./templates/bash_scripts/deploy_apigateways.sh
             ./templates/bash_scripts/deploy_apigateways.sh $FOLDER_NAME
+
+        - name: Deploy Lambda alias integrated with API Gateway
+          run: |
+            chmod +x ./templates/bash_scripts/deploy_lambda_alias.sh
+            ./templates/bash_scripts/deploy_lambda_alias.sh $FOLDER_NAME
