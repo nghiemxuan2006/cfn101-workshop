@@ -49,7 +49,7 @@ deploy_api_gateways() {
         echo "Path: $path"
         echo "Function name: $function_name"
         echo "Method: $Method"
-
+        sed -i "s/|COMMIT_HASH|/$COMMIT_HASH/g" "$item/template.yml"
         aws cloudformation deploy \
           --template-file "$item/template.yml" \
           --stack-name "${STACK_NAME_PREFIX}-$function_name-stack" \
