@@ -41,12 +41,12 @@ Resources:
     DeletionPolicy: Retain 
     UpdateReplacePolicy: Retain
     Properties:
-      FunctionName: !Sub ${InfrastructureName}-${MethodAPI}-${LambdaFunctionFileName}
+      FunctionName: !Sub ${InfrastructureName}-${LambdaFunctionFileName}
       Description: !Ref CommitMessage
   LambdaAlias:
     Type: AWS::Lambda::Alias
     Properties:
-      FunctionName: !Sub ${InfrastructureName}-${MethodAPI}-${LambdaFunctionFileName}
+      FunctionName: !Sub ${InfrastructureName}-${LambdaFunctionFileName}
       FunctionVersion: !GetAtt LambdaVersion.Version
       Description: !Ref CommitMessage
       Name: !Ref EnvironmentType
