@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: trigger lambda function from sqs.
+
+Parameters:
+  CommitMessage:
+    Type: String
+  LambdaFunctionFileName:
+    Type: String
+  InfrastructureName:
+    Type: String
+    Default: nx-vid
+  EnvironmentType:
+    Description: Specify the Environment type of the stack.
+    Type: String
+    Default: test
+    AllowedValues:
+      - dev
+      - test
+      - prod
+    ConstraintDescription: Specify either dev, test or prod.
+
+Resources:
+  LambdaVersion:
+    Type: AWS::Lambda::Version
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      FunctionName: !Sub ${InfrastructureName}-${LambdaFunctionFileName}
+      Description: !Ref CommitMessage
+  LambdaAlias:
+    Type: AWS::Lambda::Alias
+    Properties:
+      FunctionName: !Sub ${InfrastructureName}-${LambdaFunctionFileName}
+      FunctionVersion: !GetAtt LambdaVersion.Version
+      Name: !Ref EnvironmentType
+      Description: !Ref CommitMessage
+      
+  # Create the Event Source Mapping to trigger Lambda from SQS
+  MySQSEventSourceMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      EventSourceArn: !ImportValue 
+        !Sub ProcessingQueue-${EnvironmentType}
+      FunctionName: !Ref LambdaAlias
+      BatchSize: 1  # Number of messages to process in one batch
