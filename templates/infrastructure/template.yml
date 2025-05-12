@@ -40,6 +40,6 @@ Outputs:
     Export:
       Name: !Sub InfrastructureName-${EnvironmentType}
   ProcessingQueue:
-    Value: !Ref ProcessingQueue
+    Value: !GetAtt ProcessingQueue.Arn
     Export:
       Name: !Sub ProcessingQueue-${EnvironmentType}
