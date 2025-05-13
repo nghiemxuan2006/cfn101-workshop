@@ -52,11 +52,8 @@ deploy_lambda_alias(){
         if [ -d "$item" ]; then
             echo "Processing item: $item"
             local item_name=$(basename "$item" | tr '[:upper:]' '[:lower:]')
-            # Check if the directory contains a "src" folder (indicating a Lambda function)
-            if [ -d "$item/src" ]; then
             # Recursively process subdirectories
             deploy_lambda_alias "$item" "${parent_name:+$parent_name-}$item_name" "${path:+$path/}$item_name"
-            fi
         fi
       done
   fi

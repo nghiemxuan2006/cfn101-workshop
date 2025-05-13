@@ -24,9 +24,24 @@ Resources:
                   - "logs:CreateLogStream"
                   - "logs:PutLogEvents"
                 Resource: "*"
+  TaskExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
 
 Outputs:
   LambdaExecutionRole:
     Value: !GetAtt LambdaExecutionRole.Arn
     Export:
       Name: LambdaExecutionRole
+  TaskExecutionRole:
+    Value: !GetAtt TaskExecutionRole.Arn
+    Export:
+      Name: TaskExecutionRole
