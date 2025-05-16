@@ -1,7 +1,9 @@
 FUNCTION_DIR="$1"
 
 FOLDER_NAME=$(basename "$FUNCTION_DIR" | tr '[:upper:]' '[:lower:]')
+# Define variables
 S3_BUCKET="my-bucket-bucket"
+STACK_NAME_PREFIX="nx-vid"
 
 remove_all_braces() {
     local input="$1"
@@ -16,20 +18,19 @@ process_directory() {
   local dir_path="$1"
   local parent_name="$2"
 
-  if [ -d "$dir_path/src" ]; then
+  if [ -f "$dir_path/lambda_function.yml" ]; then
     # If the current directory contains a "src" folder, process it
     local function_name=$(remove_all_braces "$parent_name")
 
     echo "Processing function: $function_name"
 
-    # # Package the Lambda function
-    # cd "$dir_path/src"
-    # zip -r "${function_name}-$COMMIT_HASH.zip" .
-    # cd - > /dev/null
-
-    # # Upload the packaged function to S3
-    # echo "Uploading function: $function_name"
-    # aws s3 cp "$dir_path/src/${function_name}-$COMMIT_HASH.zip" "s3://$S3_BUCKET/lambda-functions/"
+    # deploy lambda alias, versioning
+    aws cloudformation deploy \
+        --template-file "$dir_path/lambda_function.yml" \
+        --stack-name "${STACK_NAME_PREFIX}-$function_name-alias-stack-$BRANCH_NAME" \
+        --parameter-overrides CommitMessage="$COMMIT_MESSAGE" EnvironmentType="$BRANCH_NAME" \
+        LambdaFunctionFileName="$function_name"\
+        --capabilities CAPABILITY_IAM 
   else
     for item in "$dir_path"/*; do
       if [ -d "$item" ]; then
