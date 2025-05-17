@@ -41,6 +41,6 @@ Resources:
     Type: AWS::Lambda::EventSourceMapping
     Properties:
       EventSourceArn: !ImportValue 
-        !Sub ProcessingQueue-${EnvironmentType}
+        Fn::Sub: ProcessingQueue-${EnvironmentType}
       FunctionName: !Ref LambdaAlias
       BatchSize: 1  # Number of messages to process in one batch
