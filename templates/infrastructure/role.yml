@@ -42,6 +42,7 @@ Resources:
               - "ecs:StopTask"
               - "ecs:DescribeTasks"
               - "ecs:ListTasks"
+              - "iam:PassRole"
             Resource: "*" # Replace with your ECS cluster ARN(s) for least privilege
   LambdaExecutionRole:
     Type: AWS::IAM::Role
