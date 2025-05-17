@@ -1,6 +1,34 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: IAM Role for Infrastructure
 Resources:
+  LambdaS3AccessManagedPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: "Managed policy for Lambda function to access S3"
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Action:
+              - "s3:GetObject"
+              - "s3:PutObject"
+              - "s3:ListBucket"
+              - "s3:DeleteObject"
+            Resource: "*" # Replace with your S3 bucket ARN(s) for least privilege
+  LambdaSQSAccessManagedPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: "Managed policy for Lambda function to access SQS"
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Action:
+              - "sqs:ReceiveMessage"
+              - "sqs:SendMessage"
+              - "sqs:DeleteMessage"
+              - "sqs:GetQueueAttributes"
+            Resource: "*" # Replace with your SQS queue ARN(s) for least privilege
   LambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties: 
@@ -24,6 +52,9 @@ Resources:
                   - "logs:CreateLogStream"
                   - "logs:PutLogEvents"
                 Resource: "*"
+      ManagedPolicyArns:
+        - !Ref LambdaS3AccessManagedPolicy
+        - !Ref LambdaSQSAccessManagedPolicy
   TaskExecutionRole:
     Type: AWS::IAM::Role
     Properties:
