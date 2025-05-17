@@ -29,6 +29,20 @@ Resources:
               - "sqs:DeleteMessage"
               - "sqs:GetQueueAttributes"
             Resource: "*" # Replace with your SQS queue ARN(s) for least privilege
+  LambdaECSAccessManagedPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: "Managed policy for Lambda function to access ECS"
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Action:
+              - "ecs:RunTask"
+              - "ecs:StopTask"
+              - "ecs:DescribeTasks"
+              - "ecs:ListTasks"
+            Resource: "*" # Replace with your ECS cluster ARN(s) for least privilege
   LambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties: 
@@ -55,6 +69,7 @@ Resources:
       ManagedPolicyArns:
         - !Ref LambdaS3AccessManagedPolicy
         - !Ref LambdaSQSAccessManagedPolicy
+        - !Ref LambdaECSAccessManagedPolicy
   TaskExecutionRole:
     Type: AWS::IAM::Role
     Properties:
