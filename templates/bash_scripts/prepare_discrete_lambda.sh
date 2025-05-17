@@ -22,14 +22,14 @@ process_directory() {
 
     echo "Processing function: $function_name"
 
-    # # Package the Lambda function
-    # cd "$dir_path/src"
-    # zip -r "${function_name}-$COMMIT_HASH.zip" .
-    # cd - > /dev/null
+    # Package the Lambda function
+    cd "$dir_path/src"
+    zip -r "${function_name}-$COMMIT_HASH.zip" .
+    cd - > /dev/null
 
-    # # Upload the packaged function to S3
-    # echo "Uploading function: $function_name"
-    # aws s3 cp "$dir_path/src/${function_name}-$COMMIT_HASH.zip" "s3://$S3_BUCKET/lambda-functions/"
+    # Upload the packaged function to S3
+    echo "Uploading function: $function_name"
+    aws s3 cp "$dir_path/src/${function_name}-$COMMIT_HASH.zip" "s3://$S3_BUCKET/lambda-functions/"
   else
     for item in "$dir_path"/*; do
       if [ -d "$item" ]; then
