@@ -23,7 +23,7 @@ process_directory() {
     local function_name=$(remove_all_braces "$parent_name")
 
     echo "Processing function: $function_name"
-
+    sed -i "s/|COMMIT_HASH|/$COMMIT_HASH/g" "$dir_path/template.yml"
     # # deploy lambda function
     aws cloudformation deploy \
     --template-file "$dir_path/template.yml" \
