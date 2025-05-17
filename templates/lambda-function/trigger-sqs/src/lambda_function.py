@@ -28,7 +28,7 @@ def lambda_handler(event, context):
             # Parse the message if it's in JSON format
             try:
                 message_json = json.loads(message_body)
-                logger.info(f"Parsed message JSON: {json.dumps(message_json)}")
+                logger.info(f"Parsed message JSON: {json.dumps(message_json)}") 
                 
                 # Process your message here
                 # Example: Do something with the message data
