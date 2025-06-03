@@ -64,6 +64,7 @@ Resources:
       ExecutionRoleArn: !ImportValue TaskExecutionRole
       ContainerDefinitions:
         - Image: !Sub meonghiem/${FolderName}:${TaskTag}
+          Name: !Sub ${FolderName}-task
           Essential: true
           LogConfiguration:
             LogDriver: awslogs
