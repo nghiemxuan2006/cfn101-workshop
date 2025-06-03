@@ -43,9 +43,9 @@ Resources:
         - 'ecs/${log_group_name}'
         - log_group_name: !Join 
           - '-'
-          - !Ref InfrastructureName
-          - !Ref FolderName
-          - !Ref EnvironmentType
+          - - !Ref InfrastructureName
+            - !Ref FolderName
+            - !Ref EnvironmentType
       RetentionInDays: 30
 
   TaskDefinition:
