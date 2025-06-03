@@ -40,7 +40,7 @@ jobs:
       - name: Package Docker image
         run: |
           chmod +x ./templates/bash_scripts/prepare_docker.sh
-          ./templates/bash_scripts/prepare_docker.sh $FOLDER_NAME
+          ./templates/bash_scripts/prepare_docker.sh $DOCKER_USER_NAME $DOCKER_PASSWORD $FOLDER_NAME
 
   deploy:
     runs-on: ubuntu-latest
