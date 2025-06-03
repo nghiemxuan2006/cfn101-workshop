@@ -63,7 +63,7 @@ Resources:
       Memory: !Ref ContainerMemory
       ExecutionRoleArn: !ImportValue TaskExecutionRole
       ContainerDefinitions:
-          Image: !Sub meonghiem/${FolderName}:${TaskTag}
+        - Image: !Sub meonghiem/${FolderName}:${TaskTag}
           Essential: true
           LogConfiguration:
             LogDriver: awslogs
