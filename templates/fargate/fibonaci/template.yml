@@ -1,0 +1,73 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Template to create a Fargate task definition using Docker Hub image'
+
+Parameters:
+  InfrastructureName:
+    Type: String
+    Default: nx-vid
+  EnvironmentType:
+    Description: Specify the Environment type of the stack.
+    Type: String
+    Default: test
+    AllowedValues:
+      - dev
+      - test
+      - prod
+    ConstraintDescription: Specify either dev, test or prod.
+
+  TaskTag:
+    Type: String
+    Description: Tag for the task definition
+    Default: latest
+  FolderName:
+    Type: String
+    Description: Name of the folder to store the task definition
+    Default: fibonaci
+  
+  ContainerCpu:
+    Type: Number
+    Description: CPU units for the container (1024 = 1 vCPU)
+    Default: 256
+  
+  ContainerMemory:
+    Type: Number
+    Description: Memory for the container in MB
+    Default: 512
+
+Resources:
+  # CloudWatch Log Group for container logs
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub 
+        - 'ecs/${log_group_name}'
+        - log_group_name: !Join 
+          - '-'
+          - !Ref InfrastructureName
+          - !Ref FolderName
+          - !Ref EnvironmentType
+      RetentionInDays: 30
+
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Join 
+          - '-'
+          - !Ref InfrastructureName
+          - !Ref FolderName
+          - !Ref EnvironmentType
+      RequiresCompatibilities:
+        - FARGATE
+      NetworkMode: awsvpc
+      Cpu: !Ref ContainerCpu
+      Memory: !Ref ContainerMemory
+      ExecutionRoleArn: !GetAtt TaskExecutionRole.Arn
+      ContainerDefinitions:
+          Image: !Sub meonghiem/${FolderName}:${TaskTag}
+          Essential: true
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref LogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: fargate
