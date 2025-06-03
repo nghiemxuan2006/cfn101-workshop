@@ -61,7 +61,7 @@ Resources:
       NetworkMode: awsvpc
       Cpu: !Ref ContainerCpu
       Memory: !Ref ContainerMemory
-      ExecutionRoleArn: !GetAtt TaskExecutionRole.Arn
+      ExecutionRoleArn: !ImportValue TaskExecutionRole
       ContainerDefinitions:
           Image: !Sub meonghiem/${FolderName}:${TaskTag}
           Essential: true
