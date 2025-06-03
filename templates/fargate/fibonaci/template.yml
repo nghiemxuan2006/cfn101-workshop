@@ -53,9 +53,9 @@ Resources:
     Properties:
       Family: !Join 
           - '-'
-          - !Ref InfrastructureName
-          - !Ref FolderName
-          - !Ref EnvironmentType
+          - - !Ref InfrastructureName
+            - !Ref FolderName
+            - !Ref EnvironmentType
       RequiresCompatibilities:
         - FARGATE
       NetworkMode: awsvpc
