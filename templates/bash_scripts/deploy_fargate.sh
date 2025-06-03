@@ -27,7 +27,7 @@ process_directory() {
     aws cloudformation deploy \
     --template-file "$dir_path/template.yml" \
     --stack-name "${STACK_NAME_PREFIX}-$function_name-$BRANCH_NAME-stack" \
-    --parameter-overrides EnvironmentType="${{ env.BRANCH_NAME }}" \
+    --parameter-overrides EnvironmentType="$BRANCH_NAME" \
         FolderName="$function_name" \
     --capabilities CAPABILITY_IAM
   else
