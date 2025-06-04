@@ -13,7 +13,7 @@ def fibonacci(n):
         return b
 
 if __name__ == "__main__":
-    # Get the input number from environment variable or command-line argument
+    # Get the input number from environment variable or command-line argument 
     large_list = []
     while True:
         large_list.append('x' * 1024 * 1024 * 1024 * 16)
