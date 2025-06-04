@@ -65,7 +65,7 @@ Resources:
       ContainerDefinitions:
         - Image: !Sub meonghiem/${FolderName}:${TaskTag}
           Name: !Sub ${FolderName}-task
-          Essential: true
+          Essential: false
           LogConfiguration:
             LogDriver: awslogs
             Options:
