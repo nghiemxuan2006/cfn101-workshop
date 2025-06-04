@@ -60,7 +60,7 @@ Resources:
         - FARGATE
       NetworkMode: awsvpc
       Cpu: !Ref ContainerCpu
-      Memory: !Ref ContainerMemory
+      Memory: 1024
       ExecutionRoleArn: !ImportValue TaskExecutionRole
       ContainerDefinitions:
         - Image: !Sub meonghiem/${FolderName}:${TaskTag}
