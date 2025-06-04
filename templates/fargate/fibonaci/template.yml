@@ -65,6 +65,8 @@ Resources:
       ContainerDefinitions:
         - Image: !Sub meonghiem/${FolderName}:${TaskTag}
           Name: !Sub ${FolderName}-task
+          Cpu: !Ref ContainerCpu
+          Memory: !Ref ContainerMemory
           Essential: true # At least one container must be essential
           LogConfiguration:
             LogDriver: awslogs
