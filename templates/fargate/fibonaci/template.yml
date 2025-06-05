@@ -27,12 +27,12 @@ Parameters:
   ContainerCpu:
     Type: Number
     Description: CPU units for the container (1024 = 1 vCPU)
-    Default: 256
+    Default: 1024
   
   ContainerMemory:
     Type: Number
     Description: Memory for the container in MB
-    Default: 512
+    Default: 5120
 
 Resources:
   # CloudWatch Log Group for container logs
@@ -60,13 +60,13 @@ Resources:
         - FARGATE
       NetworkMode: awsvpc
       Cpu: !Ref ContainerCpu
-      Memory: 1024
+      Memory: !Ref ContainerMemory
       ExecutionRoleArn: !ImportValue TaskExecutionRole
       ContainerDefinitions:
         - Image: !Sub meonghiem/${FolderName}:${TaskTag}
           Name: !Sub ${FolderName}-task
           Cpu: !Ref ContainerCpu
-          Memory: !Ref ContainerMemory
+          Memory: 4096 # Should set value for cpu and memory less than global value in container definition to raise event out of memory error
           Essential: true # At least one container must be essential
           LogConfiguration:
             LogDriver: awslogs
