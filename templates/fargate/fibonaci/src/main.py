@@ -18,12 +18,12 @@ if __name__ == "__main__":
     # for _ in range(5000):
     #     data.append("X" * 10**6)  # 1MB mỗi phần tử
     # test lambda out of memory
-    try:
-        large_list = []
-        while True:
-            large_list.append('x' * 1024 * 1024 * 1024 * 16)
-    except MemoryError:
-        print("MemoryError caught: Lambda function ran out of memory.")
+    # try:
+    large_list = []
+    for i in range(5):
+        large_list.append('x' * 1024 * 1024 * 1024 * 16)
+    # except MemoryError:
+    #     print("MemoryError caught: Lambda function ran out of memory.")
     n = int(os.getenv("FIBONACCI_NUMBER", 2))  # Default to 2 if not provided
     if len(sys.argv) > 1:
         n = int(sys.argv[1])
