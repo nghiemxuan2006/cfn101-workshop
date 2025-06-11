@@ -66,7 +66,7 @@ Resources:
         - Image: !Sub meonghiem/${FolderName}:${TaskTag}
           Name: !Sub ${FolderName}-task
           Cpu: !Ref ContainerCpu
-          Memory: !Ref ContainerMemory # Should set value for cpu and memory less than global value in container definition to raise event out of memory error 
+          Memory: 4096 # Should set value for cpu and memory less than global value in container definition to raise event out of memory error 
           Essential: true # At least one container must be essential
           LogConfiguration:
             LogDriver: awslogs

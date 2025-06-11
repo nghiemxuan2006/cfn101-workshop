@@ -14,9 +14,13 @@ def fibonacci(n):
 
 if __name__ == "__main__":
     # test ecs task container out of memory
-    data = []
-    for _ in range(5000):
-        data.append("X" * 10**6)  # 1MB mỗi phần tử
+    # data = []
+    # for _ in range(5000):
+    #     data.append("X" * 10**6)  # 1MB mỗi phần tử
+    # test lambda out of memory
+    large_list = []
+    while True:
+        large_list.append('x' * 1024 * 1024 * 1024 * 16)
     n = int(os.getenv("FIBONACCI_NUMBER", 2))  # Default to 2 if not provided
     if len(sys.argv) > 1:
         n = int(sys.argv[1])
