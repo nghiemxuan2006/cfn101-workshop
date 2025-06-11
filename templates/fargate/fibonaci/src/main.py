@@ -15,7 +15,7 @@ def fibonacci(n):
 if __name__ == "__main__":
     # test ecs task container out of memory
     data = []
-    for _ in range(16):
+    while True:
         data.append("X" * 10**9)  # 1GB mỗi phần tử
     # test lambda out of memory
     # try:
