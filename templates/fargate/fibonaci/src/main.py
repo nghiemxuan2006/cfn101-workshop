@@ -13,10 +13,12 @@ def fibonacci(n):
         return b
 
 if __name__ == "__main__":
+    raise Exception("This is a test exception to check the error handling in the Lambda function.")
+    exit(3)
     # test ecs task container out of memory
-    data = []
-    while True:
-        data.append("X" * 10**9)  # 1GB mỗi phần tử
+    # data = []
+    # while True:
+    #     data.append("X" * 10**9)  # 1GB mỗi phần tử
     # test lambda out of memory
     # try:
         # large_list = []
