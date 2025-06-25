@@ -116,4 +116,4 @@ Outputs:
   TaskExecutionRole:
     Value: !GetAtt TaskExecutionRole.Arn
     Export:
-      Name: TaskExecutionRole
+      Name: TaskExecutionRole 
