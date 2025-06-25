@@ -55,6 +55,18 @@ Resources:
             Action:
               - "events:PutEvents"
             Resource: "*" # Replace with your EventBridge custom bus ARN(s) for least privilege
+  LambdaInvokeAccessManagedPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: "Managed policy for Lambda function to invoke other Lambda functions asynchronously"
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Action:
+              - "lambda:InvokeFunction"
+              - "lambda:InvokeAsync"
+            Resource: "*" # Replace with specific Lambda function ARN(s) for least privilege
   LambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties: 
@@ -83,6 +95,7 @@ Resources:
         - !Ref LambdaSQSAccessManagedPolicy
         - !Ref LambdaECSAccessManagedPolicy
         - !Ref LambdaEventBridgeAccessManagedPolicy
+        - !Ref LambdaInvokeAccessManagedPolicy
   TaskExecutionRole:
     Type: AWS::IAM::Role
     Properties:
