@@ -1,5 +1,7 @@
 import os
 import sys
+import boto3
+import json
 
 def fibonacci(n):
     if n <= 0:
@@ -11,8 +13,34 @@ def fibonacci(n):
         for _ in range(2, n + 1):
             a, b = b, a + b
         return b
+    
+eventbridge = boto3.client('events')
+
+def put_event_to_eventbridge():
+    try:
+        response = eventbridge.put_events(
+            Entries=[
+                {
+                    'Source': 'Run-pytest',
+                    'DetailType': 'Run-pytest',
+                    'Detail': json.dumps({
+                        "event": "pytest:ECS event",
+                        "message": "This is a test event from the ECS task",
+                    }),
+                    'EventBusName': 'default',  # or your custom event bus name
+                }
+            ]
+        )
+        
+        print(f"Event sent successfully: {response}")
+        return response
+        
+    except Exception as e:
+        print(f"Error sending event: {e}")
+        raise
 
 if __name__ == "__main__":
+    put_event_to_eventbridge()
     raise Exception("This is a test exception to check the error handling in the Lambda function.")
     exit(3)
     # test ecs task container out of memory

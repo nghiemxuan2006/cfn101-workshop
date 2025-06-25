@@ -96,6 +96,8 @@ Resources:
         - !Ref LambdaECSAccessManagedPolicy
         - !Ref LambdaEventBridgeAccessManagedPolicy
         - !Ref LambdaInvokeAccessManagedPolicy
+
+  # IAM roles for ECS tasks
   TaskExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -107,8 +109,19 @@ Resources:
             Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+  TaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - !Ref LambdaEventBridgeAccessManagedPolicy
   
-  # Event bridge role to allow EventBridge to invoke Lambda functions
+  # IAM role for EventBridge to invoke Lambda functions
   EventBridgeInvokeLambdaRole:
     Type: AWS::IAM::Role
     Properties:
@@ -144,3 +157,7 @@ Outputs:
     Value: !GetAtt EventBridgeInvokeLambdaRole.Arn
     Export:
       Name: EventBridgeInvokeLambdaRole
+  TaskRole:
+    Value: !GetAtt TaskRole.Arn
+    Export:
+      Name: TaskRole
