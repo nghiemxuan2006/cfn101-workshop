@@ -16,6 +16,7 @@ def put_event_to_eventbridge():
         response = eventbridge.put_events(
             Entries=[
                 {
+                    'Source': 'Run-pytest',
                     'DetailType': 'Run-pytest',
                     'Detail': json.dumps({
                         'orderId': '12345',
