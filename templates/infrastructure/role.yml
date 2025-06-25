@@ -44,6 +44,17 @@ Resources:
               - "ecs:ListTasks"
               - "iam:PassRole"
             Resource: "*" # Replace with your ECS cluster ARN(s) for least privilege
+  LambdaEventBridgeAccessManagedPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: "Managed policy for Lambda function to put events to EventBridge"
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Action:
+              - "events:PutEvents"
+            Resource: "*" # Replace with your EventBridge custom bus ARN(s) for least privilege
   LambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties: 
@@ -71,6 +82,7 @@ Resources:
         - !Ref LambdaS3AccessManagedPolicy
         - !Ref LambdaSQSAccessManagedPolicy
         - !Ref LambdaECSAccessManagedPolicy
+        - !Ref LambdaEventBridgeAccessManagedPolicy
   TaskExecutionRole:
     Type: AWS::IAM::Role
     Properties:
