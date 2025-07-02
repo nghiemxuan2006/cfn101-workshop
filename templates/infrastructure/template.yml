@@ -16,8 +16,26 @@ Parameters:
     ConstraintDescription: Specify either dev, test or prod.
 
 Resources:
-  # Adding an SQS FIFO Queue
+  # Adding an SQS Standard Queue
   ProcessingQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub ${InfrastructureName}-queue-${EnvironmentType}
+      VisibilityTimeout: 300
+      MessageRetentionPeriod: 345600 # 4 days
+      DelaySeconds: 0
+      # Optional: Configure dead-letter queue if needed
+      # RedrivePolicy:
+      #   deadLetterTargetArn: !GetAtt DeadLetterQueue.Arn
+      #   maxReceiveCount: 5
+      Tags:
+        - Key: Name
+          Value: !Sub ${InfrastructureName}-queue-${EnvironmentType}
+        - Key: Environment
+          Value: !Ref EnvironmentType
+
+  # Adding an SQS FIFO Queue
+  ProcessingFifoQueue:
     Type: AWS::SQS::Queue
     Properties:
       QueueName: !Sub ${InfrastructureName}-queue-${EnvironmentType}.fifo
@@ -41,3 +59,7 @@ Outputs:
     Value: !GetAtt ProcessingQueue.Arn
     Export:
       Name: !Sub ProcessingQueue-${EnvironmentType}
+  ProcessingFifoQueue:
+    Value: !GetAtt ProcessingFifoQueue.Arn
+    Export:
+      Name: !Sub ProcessingFifoQueue-${EnvironmentType}
