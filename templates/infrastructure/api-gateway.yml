@@ -23,13 +23,6 @@ Resources:
     Properties:
       Name: !Sub ${InfrastructureName}-api
       Description: API Gateway for Lambda function
-
-  TriggerDLQ:
-    Type: AWS::SQS::Queue
-    Properties:
-      QueueName: !Sub ${InfrastructureName}-trigger-dlq
-      MessageRetentionPeriod: 1209600  # 14 days in seconds
-      VisibilityTimeout: 30  # seconds
   
   ApiGatewayRequestQueryStringValidator:
     Type: AWS::ApiGateway::RequestValidator
@@ -63,7 +56,3 @@ Outputs:
     Value: !GetAtt ApiGateway.RootResourceId
     Export:
       Name: RestApiRootResourceId
-  TriggerDLQ:
-    Value: !GetAtt TriggerDLQ.Arn
-    Export:
-      Name: TriggerDLQ

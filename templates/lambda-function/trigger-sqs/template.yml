@@ -21,13 +21,20 @@ Parameters:
     ConstraintDescription: Specify either dev, test or prod.
 
 Resources:
+  TriggerDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub ${InfrastructureName}-${LambdaFunctionFileName}-DLQ
+      MessageRetentionPeriod: 1209600  # 14 days in seconds
+      VisibilityTimeout: 30  # seconds
+
   LambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub ${InfrastructureName}-${LambdaFunctionFileName}
       Handler: lambda_function.handler
       DeadLetterConfig:
-        TargetArn: !ImportValue TriggerDLQ
+        TargetArn: !Ref TriggerDLQ 
       Role: !ImportValue LambdaExecutionRole
       Code:
         S3Bucket: my-bucket-bucket
