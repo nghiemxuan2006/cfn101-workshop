@@ -26,9 +26,9 @@ Resources:
     Properties:
       FunctionName: !Sub ${InfrastructureName}-${LambdaFunctionFileName}
       Handler: lambda_function.handler
-      DeadLetterConfig:
-        TargetArn: !ImportValue 
-          Fn::Sub: ProcessingQueue-${EnvironmentType}
+      # DeadLetterConfig:
+      #   TargetArn: !ImportValue 
+      #     Fn::Sub: ProcessingQueue-${EnvironmentType}
       Role: !ImportValue LambdaExecutionRole
       Code:
         S3Bucket: my-bucket-bucket
