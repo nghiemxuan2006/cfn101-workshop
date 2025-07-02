@@ -34,21 +34,21 @@ Resources:
         - Key: Environment
           Value: !Ref EnvironmentType
 
-  # Adding an SQS FIFO Queue
-  ProcessingFifoQueue:
-    Type: AWS::SQS::Queue
-    Properties:
-      QueueName: !Sub ${InfrastructureName}-queue-${EnvironmentType}.fifo
-      FifoQueue: true
-      ContentBasedDeduplication: true
-      VisibilityTimeout: 300
-      MessageRetentionPeriod: 345600 # 4 days
-      DelaySeconds: 5 # Adding a delay of 5 seconds to the queue
-      Tags:
-        - Key: Name
-          Value: !Sub ${InfrastructureName}-queue-${EnvironmentType}.fifo
-        - Key: Environment
-          Value: !Ref EnvironmentType
+  # # Adding an SQS FIFO Queue
+  # ProcessingFifoQueue:
+  #   Type: AWS::SQS::Queue
+  #   Properties:
+  #     QueueName: !Sub ${InfrastructureName}-queue-${EnvironmentType}.fifo
+  #     FifoQueue: true
+  #     ContentBasedDeduplication: true
+  #     VisibilityTimeout: 300
+  #     MessageRetentionPeriod: 345600 # 4 days
+  #     DelaySeconds: 5 # Adding a delay of 5 seconds to the queue
+  #     Tags:
+  #       - Key: Name
+  #         Value: !Sub ${InfrastructureName}-queue-${EnvironmentType}.fifo
+  #       - Key: Environment
+  #         Value: !Ref EnvironmentType
            
 Outputs:
   InfrastructureName:
@@ -59,7 +59,7 @@ Outputs:
     Value: !GetAtt ProcessingQueue.Arn
     Export:
       Name: !Sub ProcessingQueue-${EnvironmentType}
-  ProcessingFifoQueue:
-    Value: !GetAtt ProcessingFifoQueue.Arn
-    Export:
-      Name: !Sub ProcessingFifoQueue-${EnvironmentType}
+  # ProcessingFifoQueue:
+  #   Value: !GetAtt ProcessingFifoQueue.Arn
+  #   Export:
+  #     Name: !Sub ProcessingFifoQueue-${EnvironmentType}
