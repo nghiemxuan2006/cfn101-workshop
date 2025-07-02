@@ -44,10 +44,17 @@ Resources:
         Fn::Sub: ProcessingQueue-${EnvironmentType}
       FunctionName: !Ref LambdaAlias
       BatchSize: 1  # Number of messages to process in one batch
+
+  AsyncEventConfig:
+    Type: AWS::Lambda::EventInvokeConfig
+    Properties:
       DestinationConfig:
-        OnFailure:
-          Destination: !ImportValue 
-            Fn::Sub: ProcessingQueue-${EnvironmentType}
+          OnFailure:
+            Destination: arn:aws:lambda:us-west-1:752109736601:function:lambda-test
+      FunctionName: !Ref LambdaAlias
+      MaximumEventAgeInSeconds: 300
+      MaximumRetryAttempts: 0
+  
   EventRule:
     Type: AWS::Events::Rule
     Properties:
