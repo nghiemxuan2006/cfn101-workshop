@@ -44,5 +44,6 @@ Resources:
       BatchSize: 1  # Number of messages to process in one batch
       DestinationConfig:
         OnFailure:
-          Destination: !GetAtt ProcessingQueue.Arn
+          Destination: !ImportValue 
+            Fn::Sub: ProcessingQueue-${EnvironmentType}
       
