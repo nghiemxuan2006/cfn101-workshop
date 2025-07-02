@@ -35,15 +35,3 @@ Resources:
       FunctionVersion: !GetAtt LambdaVersion.Version
       Name: !Ref EnvironmentType
       Description: !Ref CommitMessage
-  
-  # Create the Event Source Mapping to trigger Lambda from SQS
-  MySQSEventSourceMapping:
-    Type: AWS::Lambda::EventSourceMapping
-    Properties:
-      FunctionName: !Ref LambdaAlias
-      BatchSize: 1  # Number of messages to process in one batch
-      DestinationConfig:
-        OnFailure:
-          Destination: !ImportValue 
-            Fn::Sub: ProcessingQueue-${EnvironmentType}
-      
