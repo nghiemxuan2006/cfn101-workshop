@@ -34,7 +34,7 @@ Resources:
       FunctionName: !Sub ${InfrastructureName}-${LambdaFunctionFileName}
       Handler: lambda_function.handler
       DeadLetterConfig:
-        TargetArn: !Ref TriggerDLQ 
+        TargetArn: !GetAtt TriggerDLQ.Arn
       Role: !ImportValue LambdaExecutionRole
       Code:
         S3Bucket: my-bucket-bucket
