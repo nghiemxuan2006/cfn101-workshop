@@ -1,9 +1,8 @@
-# Use an official Python runtime as a parent image
-FROM python:3.9-slim
+FROM python:3.11-slim-buster
 
-# Set the working directory in the container
 WORKDIR /app
 
+# Copy requirements and install Python dependencies
 # Install any needed packages specified in requirements.txt
 COPY src/requirements.txt /app
 RUN pip install -r requirements.txt
@@ -11,8 +10,8 @@ RUN pip install -r requirements.txt
 # Copy the current directory contents into the container
 COPY src/ /app
 
-# Define environment variable
-ENV PYTHONUNBUFFERED=1
+# Make the script executable
+RUN chmod +x entrypoint.sh
 
-# Run app.py when the container launches
-CMD ["python", "main.py"]
+# Set the entrypoint
+CMD ["./entrypoint.sh"]
