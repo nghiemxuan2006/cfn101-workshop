@@ -11,7 +11,8 @@ RUN pip install -r requirements.txt
 COPY src/ /app
 
 # Make the script executable
-RUN chmod +x entrypoint.sh
+# RUN chmod +x entrypoint.sh
 
 # Set the entrypoint
-CMD ["./entrypoint.sh"]
+# CMD ["./entrypoint.sh"]
+CMD ["python", "main.py"]
