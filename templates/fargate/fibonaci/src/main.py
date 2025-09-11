@@ -46,16 +46,14 @@ if __name__ == "__main__":
     # exit(3)
     # Example: Use numpy to calculate Fibonacci numbers efficiently
     n = 5
-    raise Exception("This is a test exception to check the error handling in the Lambda function.")
+    # raise Exception("This is a test exception to check the error handling in the Lambda function.")
     print(f"Calculating the {n}th Fibonacci number using numpy...")
-    import time
-    time.sleep(15)
     print("Wake up after sleep 15s")
 
-    # Use matrix exponentiation for fast Fibonacci calculation
-    F = np.array([[1, 1], [1, 0]], dtype=object)
-    result = np.linalg.matrix_power(F, n - 1)
-    print(result[0, 0])
+    # # Use matrix exponentiation for fast Fibonacci calculation
+    # F = np.array([[1, 1], [1, 0]], dtype=object)
+    # result = np.linalg.matrix_power(F, n - 1)
+    # print(result[0, 0])
 
     # test ecs task container out of memory
     # data = []
@@ -68,8 +66,8 @@ if __name__ == "__main__":
         #     large_list.append('x' * 1024 * 1024 * 1024 * 16)
     # except MemoryError:
     #     print("MemoryError caught: Lambda function ran out of memory.")
-    n = int(os.getenv("FIBONACCI_NUMBER", 2))  # Default to 2 if not provided
-    if len(sys.argv) > 1:
-        n = int(sys.argv[1])
+    # n = int(os.getenv("FIBONACCI_NUMBER", 2))  # Default to 2 if not provided
+    # if len(sys.argv) > 1:
+    #     n = int(sys.argv[1])
     
-    print(f"The {n}th Fibonacci number is: {fibonacci(n)}")
+    # print(f"The {n}th Fibonacci number is: {fibonacci(n)}")
