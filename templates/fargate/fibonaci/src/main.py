@@ -49,7 +49,7 @@ if __name__ == "__main__":
     # raise Exception("This is a test exception to check the error handling in the Lambda function.")
     print(f"Calculating the {n}th Fibonacci number using numpy...")
     import time
-    time.sleep(60)
+    time.sleep(60 *30)
     print("Wake up after sleep 60s")
 
     # # Use matrix exponentiation for fast Fibonacci calculation
