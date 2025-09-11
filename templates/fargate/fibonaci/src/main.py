@@ -48,7 +48,9 @@ if __name__ == "__main__":
     n = 5
     # raise Exception("This is a test exception to check the error handling in the Lambda function.")
     print(f"Calculating the {n}th Fibonacci number using numpy...")
-    print("Wake up after sleep 15s")
+    import time
+    time.sleep(60)
+    print("Wake up after sleep 60s")
 
     # # Use matrix exponentiation for fast Fibonacci calculation
     # F = np.array([[1, 1], [1, 0]], dtype=object)

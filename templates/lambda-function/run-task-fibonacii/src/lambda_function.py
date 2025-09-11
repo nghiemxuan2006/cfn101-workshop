@@ -36,57 +36,61 @@ def put_event_to_eventbridge():
         print(f"Error sending event: {e}")
         raise
 
-# def handler(event, context):
-#     try:
-#         for i in range(1):
-#             response = client.run_task(
-#                 cluster=cluster,  # Replace with your ECS cluster name
-#                 launchType='FARGATE',
-#                 taskDefinition=task_definition,  # Replace with your task definition and revision
-#                 count=1,
-#                 platformVersion='LATEST',
-#                 networkConfiguration={
-#                     'awsvpcConfiguration': {
-#                         'subnets': subnet_ids,
-#                         'assignPublicIp': 'ENABLED'
-#                     }
-#                 },
-#                 overrides={
-#                     'containerOverrides': [
-#                         {
-#                             'name': 'fibonaci-task',  # Replace with your container name
-#                             'environment': [
-#                                 {
-#                                     'name': 'FIBONACCI_NUMBER',
-#                                     'value': "11"
-#                                 },
-#                             ]
-#                         },
-#                     ]
-#                 }
-#             )
-#             sleep_time = i
-#             print("response: ", response)
-#             # time.sleep(sleep_time)
-#     except Exception as e:
-#         print(e)
-#         return {
-#             "statusCode": 500,
-#             "body": "error"
-#         }
-#     return {
-#         "statusCode": 200,
-#         "body": "success"
-#     }
-
-# Usage in Lambda function
 def handler(event, context):
-    # Your business logic here
-    
-    # Send event to EventBridge
-    put_event_to_eventbridge()
-    
+    try:
+        for i in range(1):
+            response = client.run_task(
+                cluster=cluster,  # Replace with your ECS cluster name
+                launchType='FARGATE',
+                taskDefinition=task_definition,  # Replace with your task definition and revision
+                count=1,
+                platformVersion='LATEST',
+                networkConfiguration={
+                    'awsvpcConfiguration': {
+                        'subnets': subnet_ids,
+                        'assignPublicIp': 'ENABLED'
+                    }
+                },
+                overrides={
+                    'containerOverrides': [
+                        {
+                            'name': 'fibonaci-task',  # Replace with your container name
+                            'environment': [
+                                {
+                                    'name': 'FIBONACCI_NUMBER',
+                                    'value': "11"
+                                },
+                                {
+                                    'name': 'MAX_TIMEOUT',
+                                    'value': "15s"
+                                }
+                            ]
+                        },
+                    ]
+                }
+            )
+            sleep_time = i
+            print("response: ", response)
+            # time.sleep(sleep_time)
+    except Exception as e:
+        print(e)
+        return {
+            "statusCode": 500,
+            "body": "error"
+        }
     return {
-        'statusCode': 200,
-        'body': json.dumps('Event sent successfully')
+        "statusCode": 200,
+        "body": "success"
     }
+
+# # Usage in Lambda function
+# def handler(event, context):
+#     # Your business logic here
+    
+#     # Send event to EventBridge
+#     put_event_to_eventbridge()
+    
+#     return {
+#         'statusCode': 200,
+#         'body': json.dumps('Event sent successfully')
+#     }
