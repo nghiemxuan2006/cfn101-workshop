@@ -11,8 +11,11 @@ RUN pip install -r requirements.txt
 COPY src/ /app
 
 # Make the script executable
-# RUN chmod +x entrypoint.sh
+RUN chmod +x entrypoint.sh
+
+# Set environment variables for unbuffered output
+ENV PYTHONUNBUFFERED=1
 
 # Set the entrypoint
-# CMD ["./entrypoint.sh"]
-CMD ["python", "main.py"]
+CMD ["./entrypoint.sh"]
+# CMD ["python", "main.py"]

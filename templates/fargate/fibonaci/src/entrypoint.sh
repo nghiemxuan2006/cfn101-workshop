@@ -2,7 +2,7 @@
 
 set -e
 # timeout 30s python heavy_data_test.py
-timeout --signal=TERM 10s python main.py
+timeout --signal=TERM 10s python -u main.py
 status=$?
 
 if [ $status -eq 124 ]; then 
