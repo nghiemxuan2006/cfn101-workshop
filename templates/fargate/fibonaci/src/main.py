@@ -46,6 +46,7 @@ if __name__ == "__main__":
     # exit(3)
     # Example: Use numpy to calculate Fibonacci numbers efficiently
     n = 5
+    raise Exception("This is a test exception to check the error handling in the Lambda function.")
     print(f"Calculating the {n}th Fibonacci number using numpy...")
     import time
     time.sleep(15)
