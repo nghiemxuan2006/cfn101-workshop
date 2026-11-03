@@ -71,14 +71,14 @@ Resources:
       RouteTableId: !Ref PrivateRouteTable
 
   # Free gateway endpoint: adds an S3 route to the private route table
-  S3GatewayEndpoint:
-    Type: AWS::EC2::VPCEndpoint
-    Properties:
-      VpcId: !Ref VPC
-      ServiceName: !Sub com.amazonaws.${AWS::Region}.s3
-      VpcEndpointType: Gateway
-      RouteTableIds:
-        - !Ref PrivateRouteTable
+  # S3GatewayEndpoint:
+  #   Type: AWS::EC2::VPCEndpoint
+  #   Properties:
+  #     VpcId: !Ref VPC
+  #     ServiceName: !Sub com.amazonaws.${AWS::Region}.s3
+  #     VpcEndpointType: Gateway
+  #     RouteTableIds:
+  #       - !Ref PrivateRouteTable
 
   # Shared security group for Lambda functions in the private subnets
   LambdaSecurityGroup:
