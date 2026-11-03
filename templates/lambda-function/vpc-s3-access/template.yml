@@ -1,0 +1,85 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: Lambda function in private VPC (infrastructure/private-vpc.yml) with access to S3.
+
+Parameters:
+  CommitMessage:
+    Type: String
+  LambdaFunctionFileName:
+    Type: String
+  InfrastructureName:
+    Type: String
+    Default: nx-vid
+  EnvironmentType:
+    Description: Specify the Environment type of the stack.
+    Type: String
+    Default: test
+    AllowedValues:
+      - dev
+      - test
+      - prod
+    ConstraintDescription: Specify either dev, test or prod.
+
+Resources:
+  DataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${InfrastructureName}-${LambdaFunctionFileName}-${AWS::AccountId}
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        # Logs + ENI management (required for Lambda in a VPC)
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+      Policies:
+        - PolicyName: S3BucketAccess
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: s3:ListBucket
+                Resource: !GetAtt DataBucket.Arn
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:DeleteObject
+                Resource: !Sub ${DataBucket.Arn}/*
+
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub ${InfrastructureName}-${LambdaFunctionFileName}
+      Handler: lambda_function.handler
+      Role: !GetAtt LambdaRole.Arn
+      Code:
+        S3Bucket: my-bucket-bucket
+        S3Key:  !Sub lambda-functions/${LambdaFunctionFileName}-|COMMIT_HASH|.zip
+      Runtime: python3.12
+      Timeout: 30
+      VpcConfig:
+        SubnetIds:
+          - !ImportValue
+            Fn::Sub: ${InfrastructureName}-${EnvironmentType}-PrivateSubnet1
+          - !ImportValue
+            Fn::Sub: ${InfrastructureName}-${EnvironmentType}-PrivateSubnet2
+        SecurityGroupIds:
+          - !ImportValue
+            Fn::Sub: ${InfrastructureName}-${EnvironmentType}-LambdaSecurityGroup
+      Environment:
+        Variables:
+          ENV_TYPE: !Ref EnvironmentType
+          BUCKET_NAME: !Ref DataBucket

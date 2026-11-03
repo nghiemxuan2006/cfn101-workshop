@@ -1,0 +1,114 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: >
+  Private VPC (no IGW, no NAT) with 2 private subnets and a free S3 Gateway
+  VPC Endpoint so workloads in private subnets can reach S3.
+
+Parameters:
+  InfrastructureName:
+    Type: String
+    Default: nx-vid
+  EnvironmentType:
+    Type: String
+    Default: dev
+    AllowedValues:
+      - dev
+      - test
+      - prod
+  VpcCIDR:
+    Type: String
+    Default: 10.10.0.0/16
+
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCIDR
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: !Sub ${InfrastructureName}-private-vpc-${EnvironmentType}
+
+  PrivateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !Select [0, !Cidr [!Ref VpcCIDR, 4, 8]]
+      AvailabilityZone: !Select [0, !GetAZs ""]
+      Tags:
+        - Key: Name
+          Value: !Sub ${InfrastructureName}-private-subnet-1-${EnvironmentType}
+
+  PrivateSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: !Select [1, !Cidr [!Ref VpcCIDR, 4, 8]]
+      AvailabilityZone: !Select [1, !GetAZs ""]
+      Tags:
+        - Key: Name
+          Value: !Sub ${InfrastructureName}-private-subnet-2-${EnvironmentType}
+
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub ${InfrastructureName}-private-rt-${EnvironmentType}
+
+  PrivateSubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet1
+      RouteTableId: !Ref PrivateRouteTable
+
+  PrivateSubnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet2
+      RouteTableId: !Ref PrivateRouteTable
+
+  # Free gateway endpoint: adds an S3 route to the private route table
+  S3GatewayEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      VpcId: !Ref VPC
+      ServiceName: !Sub com.amazonaws.${AWS::Region}.s3
+      VpcEndpointType: Gateway
+      RouteTableIds:
+        - !Ref PrivateRouteTable
+
+  # Shared security group for Lambda functions in the private subnets
+  LambdaSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub ${InfrastructureName}-${EnvironmentType} lambda egress HTTPS only
+      VpcId: !Ref VPC
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: !Sub ${InfrastructureName}-lambda-sg-${EnvironmentType}
+
+Outputs:
+  VpcId:
+    Value: !Ref VPC
+    Export:
+      Name: !Sub ${InfrastructureName}-${EnvironmentType}-VpcId
+  PrivateSubnet1:
+    Value: !Ref PrivateSubnet1
+    Export:
+      Name: !Sub ${InfrastructureName}-${EnvironmentType}-PrivateSubnet1
+  PrivateSubnet2:
+    Value: !Ref PrivateSubnet2
+    Export:
+      Name: !Sub ${InfrastructureName}-${EnvironmentType}-PrivateSubnet2
+  LambdaSecurityGroup:
+    Value: !Ref LambdaSecurityGroup
+    Export:
+      Name: !Sub ${InfrastructureName}-${EnvironmentType}-LambdaSecurityGroup

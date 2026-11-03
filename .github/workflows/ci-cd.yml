@@ -45,7 +45,15 @@ jobs:
               --stack-name nx-vid-infrastructure-${{ env.BRANCH_NAME }}-stack \
               --parameter-overrides EnvironmentType="${{ env.BRANCH_NAME }}" \
               --capabilities CAPABILITY_IAM
-        
+
+        - name: Deploy Private VPC Stack
+          run: |
+            echo "Deploying private VPC stack..."
+            aws cloudformation deploy \
+              --template-file templates/infrastructure/private-vpc.yml \
+              --stack-name nx-vid-private-vpc-${{ env.BRANCH_NAME }}-stack \
+              --parameter-overrides EnvironmentType="${{ env.BRANCH_NAME }}"
+
         - name: Deploy api gateway
           run: |
             echo "Deploying API Gateway stack..."
